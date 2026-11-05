@@ -25,6 +25,7 @@ export interface PromptRepositoryContext {
 
 export interface PromptExecutionContext {
   readonly worktreeID?: string
+  readonly checkoutPath: string
   readonly path: string
   readonly baseRevision: string
   readonly writerIsolationValid: boolean
@@ -142,8 +143,14 @@ export function compileExecutionPrompt(input: {
     reasons.push("Packet, project, checkout, branch, and worktree fields cannot contain control characters")
   if (input.repository.dirtyState !== "clean" || input.repository.dirtyPaths.length > 0)
     reasons.push("Repository checkout must be clean before packet compilation")
-  if (!absolutePath(input.execution.path) || !input.execution.baseRevision.trim())
-    reasons.push("Execution path must be absolute and worktree base revision must be pinned")
+  if (!absolutePath(input.execution.checkoutPath) || !absolutePath(input.execution.path) || !input.execution.baseRevision.trim())
+    reasons.push("Primary checkout and execution paths must be absolute, and worktree base revision must be pinned")
+  if (absolutePath(input.execution.checkoutPath) && absolutePath(input.execution.path)) {
+    const checkout = path.resolve(input.execution.checkoutPath)
+    const worktree = path.resolve(input.execution.path)
+    if (checkout === worktree || worktree.startsWith(checkout.endsWith(path.sep) ? checkout : checkout + path.sep))
+      reasons.push("Execution worktree must be separate from and outside the primary checkout")
+  }
   if (input.execution.baseRevision !== input.repository.revision)
     reasons.push("Execution worktree base revision does not match the repository snapshot")
   if (!Number.isSafeInteger(input.execution.activeWriterCount) || input.execution.activeWriterCount < 0)
@@ -212,6 +219,7 @@ export function compileExecutionPrompt(input: {
     "- Starting revision: " + input.repository.revision,
     "- Dirty state: clean",
     "- Worktree ID: " + (input.execution.worktreeID ? safeText(input.execution.worktreeID, 200) : "primary checkout (not recommended for parallel writes)"),
+    "- Primary checkout path: " + safeText(input.execution.checkoutPath, 1000),
     "- Worktree path: " + safeText(input.execution.path, 1000),
     "- Worktree base revision: " + input.execution.baseRevision,
     "- Source snapshot: " + input.repository.revision,
