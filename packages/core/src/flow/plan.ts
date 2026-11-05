@@ -210,11 +210,20 @@ export function parsePlanMarkdown(markdown: string): PlanParseResult {
       }
     }
 
-    if (statusValue && !status) {
+    if (Object.hasOwn(fields, "Status") && !status) {
       diagnostics.push({
         code: "invalid-status",
-        message: `Task ${section.id} has an unsupported status: ${statusValue}`,
+        message: `Task ${section.id} has an unsupported status: ${statusValue || "(empty)"}`,
         line: section.start + (fieldLines.get("Status") ?? 1),
+        taskID: section.id,
+      })
+    }
+
+    if (Object.hasOwn(fields, "Depends on") && !dependencyValue) {
+      diagnostics.push({
+        code: "invalid-dependency",
+        message: `Task ${section.id} must use "none" for an empty dependency list`,
+        line: section.start + (fieldLines.get("Depends on") ?? 1),
         taskID: section.id,
       })
     }
