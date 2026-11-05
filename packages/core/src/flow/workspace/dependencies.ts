@@ -148,9 +148,9 @@ export function resolveWorkspaceTaskDependencies(input: {
       }
     }
 
-    const targets = adjacency.get(fromKey) ?? new Set<string>()
-    targets.add(toKey)
-    adjacency.set(fromKey, targets)
+    const dependents = adjacency.get(toKey) ?? new Set<string>()
+    dependents.add(fromKey)
+    adjacency.set(toKey, dependents)
     indegree.set(fromKey, (indegree.get(fromKey) ?? 0) + 1)
   }
 
