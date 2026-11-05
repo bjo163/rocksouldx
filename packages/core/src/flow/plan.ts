@@ -13,6 +13,7 @@ export type PlanDiagnosticCode =
   | "empty-title"
   | "duplicate-task-id"
   | "missing-required-field"
+  | "empty-required-field"
   | "invalid-status"
   | "invalid-dependency"
   | "missing-dependency"
@@ -205,6 +206,16 @@ export function parsePlanMarkdown(markdown: string): PlanParseResult {
           code: "missing-required-field",
           message: `Task ${section.id} is missing required field: ${field}`,
           line: section.start + 1,
+          taskID: section.id,
+        })
+        continue
+      }
+
+      if (field !== "Status" && field !== "Depends on" && !fields[field]?.trim()) {
+        diagnostics.push({
+          code: "empty-required-field",
+          message: `Task ${section.id} has an empty required field: ${field}`,
+          line: section.start + (fieldLines.get(field) ?? 1),
           taskID: section.id,
         })
       }
