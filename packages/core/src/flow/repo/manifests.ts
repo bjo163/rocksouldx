@@ -271,7 +271,7 @@ function packageInfo(file: ManifestFile, warnings: ManifestWarning[]): PackageMa
         if (typeof value !== "string") return []
         const safe = redactCommand(value)
         return [{
-          packagePath: file.path,
+          packagePath: directory,
           name,
           command: safe.command,
           intent: intent(name),
