@@ -3,6 +3,15 @@
 - This repository does not use Changesets. Do not add `.changeset` files; follow the existing release workflow instead.
 - The default branch is `dev`. Base branches and worktrees on `origin/dev`, target PRs at `dev`, and diff against `origin/dev` unless told otherwise.
 
+## ROCKSOUL DX product documentation
+
+- The canonical product overview is README.md; the documentation map is docs/README.md.
+- ROCKSOUL-specific product direction lives in docs/product. Workflow integration boundaries live in docs/architecture. Executable implementation tasks live in docs/plans.
+- Treat feature status in the ROCKSOUL FLOW blueprint and plan as authoritative. A planned or proposed capability must never be described as implemented without source-level evidence and verification.
+- Before adding a ROCKSOUL FLOW feature, inspect the current implementation and the listed reuse points. Extend existing OpenCode sessions, tools, plugins, MCP, worktrees, permission boundaries, and UI surfaces when they already satisfy the requirement; do not create duplicate subsystems by default.
+- Keep product-specific behavior isolated from upstream-compatible behavior. Preserve upstream license notices, attribution, application identifiers, and release/update semantics unless a separately reviewed change explicitly requires otherwise.
+- Keep plans in small, independently verifiable tasks. Do not execute multiple unrelated plan IDs in one implementation pass. Update the plan only with evidence-backed status changes.
+
 ## Live TUI Testing
 
 - Run `bun run dev:live` from a development worktree to test its TUI against the currently elected `opencode` background server and live sessions.

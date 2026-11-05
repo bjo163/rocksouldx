@@ -1,6 +1,6 @@
-# OpenCode Desktop
+# ROCKSOUL DX Desktop
 
-The OpenCode Desktop app, built with Electron.
+The ROCKSOUL DX desktop shell is based on the OpenCode desktop application and built with Electron. ROCKSOUL DX is an independent fork, not an official OpenCode product. See the [brand and desktop UI contract](../../docs/branding/ROCKSOUL-DX.md).
 
 ## Development
 

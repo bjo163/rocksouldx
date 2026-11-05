@@ -1,4 +1,5 @@
 import { createMemo, For, type JSX, onCleanup, Show, splitProps } from "solid-js"
+import { useNavigate } from "@solidjs/router"
 import { createStore } from "solid-js/store"
 import { createResizeObserver } from "@solid-primitives/resize-observer"
 import { Popover } from "@kobalte/core/popover"
@@ -159,6 +160,7 @@ export function HomeProjectsView(props: HomeProjectsViewProps) {
 }
 
 function HomeProjectsPanel(props: HomeProjectsViewProps) {
+  const navigate = useNavigate()
   let observer: MutationObserver | undefined
   let frame = 0
   const [contextMenu, setContextMenu] = createStore<{ open: string | undefined }>({ open: undefined })
@@ -194,6 +196,23 @@ function HomeProjectsPanel(props: HomeProjectsViewProps) {
         props.onWheel(event)
       }}
     >
+      <Show when={!props.dropdown}>
+        <div data-slot="rocksoul-brand" class="flex min-w-0 shrink-0 items-center gap-3 px-1.5 py-2">
+          <svg viewBox="0 0 40 40" class="size-10 shrink-0" role="img" aria-label="ROCKSOUL DX">
+            <path d="M20 2.5 34 10.2V27.8L20 35.5 6 27.8V10.2L20 2.5Z" fill="#F15A24" />
+            <path d="M13 27V12h8.2c5.2 0 6.8 6.3 2.5 8.8L30 27M13 20.5h9.5" fill="none" stroke="#171512" strokeWidth="3.2" strokeLinecap="square" strokeLinejoin="miter" />
+            <path d="M29.5 7.8 32.5 9.5" fill="none" stroke="#C4DE65" strokeWidth="2.4" strokeLinecap="square" />
+          </svg>
+          <span class="flex min-w-0 flex-1 flex-col leading-none">
+            <span class="flex items-baseline gap-1.5">
+              <strong class="rocksoul-brand-word">ROCKSOUL</strong>
+              <strong class="rocksoul-brand-dx">DX</strong>
+            </span>
+            <span class="rocksoul-brand-caption mt-1.5">AGENT WORKBENCH / EST. 001</span>
+          </span>
+          <span class="rocksoul-brand-signal" aria-hidden="true" />
+        </div>
+      </Show>
       <Show when={!props.dropdown}>
         <div class="flex h-7 min-w-0 shrink-0 items-center justify-between pl-1.5 pr-3">
           {/* Below lg, Projects heads the page on the collapsed sidebar toggle's line. Starting the space at the row's
@@ -328,6 +347,7 @@ function HomeProjectsPanel(props: HomeProjectsViewProps) {
         class="mb-8 mt-4 hidden shrink-0 lg:flex"
         onOpenSettings={props.onOpenSettings}
         onOpenHelp={props.onOpenHelp}
+        onOpenCockpit={() => navigate("/cockpit")}
         language={props.language}
       />
     </aside>
@@ -338,6 +358,7 @@ export function HomeUtilityNav(props: {
   class?: string
   onOpenSettings: () => void
   onOpenHelp: () => void
+  onOpenCockpit: () => void
   language: ReturnType<typeof useLanguage>
 }) {
   return (
@@ -351,6 +372,14 @@ export function HomeUtilityNav(props: {
       >
         <Icon name="settings-gear" size="small" />
         <span class={HOME_PROJECT_NAV_LABEL}>{props.language.t("sidebar.settings")}</span>
+      </HomeProjectNavButton>
+      <HomeProjectNavButton
+        type="button"
+        class="text-v2-text-text-faint [&>[data-slot=icon-svg]]:text-v2-icon-icon-muted"
+        onClick={props.onOpenCockpit}
+      >
+        <Icon name="window-analytics" size="small" />
+        <span class={HOME_PROJECT_NAV_LABEL}>{props.language.t("cockpit.nav")}</span>
       </HomeProjectNavButton>
       <HomeProjectNavButton
         type="button"

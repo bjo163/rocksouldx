@@ -1,25 +1,37 @@
+/* Keep the original path reveal for the first-launch Rocksoul DX artwork. */
 [data-component="first-launch-splash"] path {
-  /* Outline paths use a normalized length so the drawing scales with the wordmark. */
   stroke-dasharray: 1;
-  animation: first-launch-wordmark-draw 1000ms ease-out both;
+  animation: first-launch-path-draw 1000ms ease-out both;
 }
 
-[data-component="first-launch-splash"][data-drawing="pending"] path {
+[data-component="first-launch-splash"] [data-slot="wordmark-text"] {
+  clip-path: inset(0 100% 0 0);
+  animation: first-launch-wordmark-reveal 1000ms ease-out both;
+}
+
+[data-component="first-launch-splash"][data-drawing="pending"] path,
+[data-component="first-launch-splash"][data-drawing="pending"] [data-slot="wordmark-text"] {
   animation-play-state: paused;
 }
 
-@keyframes first-launch-wordmark-draw {
-  from {
-    stroke-dashoffset: 1;
-  }
-  to {
-    stroke-dashoffset: 0;
-  }
+@keyframes first-launch-path-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes first-launch-wordmark-reveal {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   [data-component="first-launch-splash"] path {
     animation: none;
     stroke-dasharray: none;
+  }
+
+  [data-component="first-launch-splash"] [data-slot="wordmark-text"] {
+    animation: none;
+    clip-path: none;
   }
 }

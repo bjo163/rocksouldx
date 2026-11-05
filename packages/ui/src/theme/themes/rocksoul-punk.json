@@ -1,0 +1,35 @@
+{
+  "$schema": "https://opencode.ai/desktop-theme.json",
+  "name": "Rocksoul Punk",
+  "id": "rocksoul-punk",
+  "light": {
+    "palette": {
+      "neutral": "#f3f0e9",
+      "ink": "#29242e",
+      "primary": "#78951d",
+      "accent": "#a356c9",
+      "success": "#328456",
+      "warning": "#bb8b1f",
+      "error": "#c84656",
+      "info": "#397cae",
+      "interactive": "#748f1e",
+      "diffAdd": "#4c9d6b",
+      "diffDelete": "#d15162"
+    }
+  },
+  "dark": {
+    "palette": {
+      "neutral": "#111114",
+      "ink": "#e9e3eb",
+      "primary": "#b6e33b",
+      "accent": "#c879ec",
+      "success": "#75d18f",
+      "warning": "#edd45d",
+      "error": "#fa6874",
+      "info": "#65b9ea",
+      "interactive": "#b6e33b",
+      "diffAdd": "#7ce69b",
+      "diffDelete": "#fb7580"
+    }
+  }
+}

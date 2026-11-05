@@ -1,4 +1,5 @@
 import { ScrollView } from "@opencode/ui/scroll-view"
+import { useNavigate } from "@solidjs/router"
 import { createMediaQuery } from "@solid-primitives/media"
 import { Show } from "solid-js"
 import { createHomeController } from "./model"
@@ -12,6 +13,7 @@ import { HomeSessions } from "./sessions/region"
 
 export function Home() {
   const mobile = createMediaQuery("(max-width: 767px)")
+  const navigate = useNavigate()
   const home = createHomeController()
   const projects = createHomeProjectsController(home)
   const sessions = createHomeSessionsController(home)
@@ -55,6 +57,7 @@ export function Home() {
           class="flex"
           onOpenSettings={projects.utility.settings}
           onOpenHelp={projects.utility.help}
+          onOpenCockpit={() => navigate("/cockpit")}
           language={projects.copy.language}
         />
       </div>
