@@ -47,6 +47,7 @@ describe("analyzeManifestInventory", () => {
       name: "@rocksoul/app",
     })
     expect(result.scripts.map((script) => script.intent)).toEqual(["build", "lint", "test", "typecheck", "build"])
+    expect(result.scripts.map((script) => script.packagePath)).toEqual(["packages/app", "", "", "", ""])
     expect(result.manifestPaths).not.toContain("README.md")
     expect(result.warnings).toEqual([])
   })
