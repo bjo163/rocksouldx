@@ -1,4 +1,4 @@
-import { classifyScanPath } from "./scan-policy.js"
+import { classifyScanPath, normalizeScanPath } from "./scan-policy.js"
 
 export type DocumentationKind =
   | "agent-guidance"
@@ -95,7 +95,7 @@ export function analyzeDocumentationInventory(paths: readonly string[]): Documen
  * Ordering is root-to-leaf so more deeply nested instructions can be applied last.
  */
 export function applicableGuidance(sourcePath: string, guidancePaths: readonly string[]): readonly string[] {
-  const source = normalizeSourcePath(sourcePath)
+  const source = normalizeScanPath(sourcePath)
   if (!source) return []
 
   const directory = source.includes("/") ? source.slice(0, source.lastIndexOf("/")) : ""
@@ -103,7 +103,7 @@ export function applicableGuidance(sourcePath: string, guidancePaths: readonly s
 
   return guidancePaths
     .flatMap((input) => {
-      const normalized = normalizeSourcePath(input)
+      const normalized = normalizeScanPath(input)
       if (!normalized || normalized.split("/").at(-1) !== "AGENTS.md" || !allowed.has(normalized)) return []
       return [normalized]
     })
@@ -111,11 +111,3 @@ export function applicableGuidance(sourcePath: string, guidancePaths: readonly s
     .toSorted((a, b) => a.split("/").length - b.split("/").length || a.localeCompare(b))
 }
 
-function normalizeSourcePath(input: string): string | undefined {
-  const value = input.replaceAll("\\", "/")
-  if (!value || value.startsWith("/") || /^[A-Za-z]:/.test(value)) return undefined
-  const parts = value.split("/")
-  if (parts.some((part) => part === "..")) return undefined
-  const normalized = parts.filter((part) => part && part !== ".").join("/")
-  return normalized || undefined
-}
