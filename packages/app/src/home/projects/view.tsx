@@ -361,7 +361,7 @@ export function HomeUtilityNav(props: {
         class="text-v2-text-text-faint [&>[data-slot=icon-svg]]:text-v2-icon-icon-muted"
         onClick={props.onOpenCockpit}
       >
-        <Icon name="layout-dashboard" size="small" />
+        <Icon name="window-analytics" size="small" />
         <span class={HOME_PROJECT_NAV_LABEL}>{props.language.t("cockpit.nav")}</span>
       </HomeProjectNavButton>
       <HomeProjectNavButton

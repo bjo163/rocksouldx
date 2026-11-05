@@ -180,12 +180,13 @@ function applyThemeCss(theme: DesktopTheme, themeId: string, mode: "light" | "da
   if (themeId.startsWith("rocksoul-")) document.documentElement.dataset.rocksoulSkin = themeId
   else delete document.documentElement.dataset.rocksoulSkin
   document.documentElement.dataset.colorScheme = mode
-  document.documentElement.style.backgroundColor = isDark ? "#080808" : "#fafafa"
+  const background = tokens["background-base"] ?? (isDark ? "#080808" : "#fafafa")
+  document.documentElement.style.backgroundColor = background
 
-  // Update theme-color meta tag to match light/dark mode
+  // Update theme-color meta tag to match the active theme
   const meta = document.querySelector('meta[name="theme-color"]')
 
-  if (meta) meta.setAttribute("content", isDark ? "#080808" : "#fafafa")
+  if (meta) meta.setAttribute("content", background)
 }
 
 function cacheThemeVariants(theme: DesktopTheme, themeId: string) {

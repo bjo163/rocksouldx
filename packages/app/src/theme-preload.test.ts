@@ -13,6 +13,7 @@ const setSystemDark = (matches: boolean) =>
 beforeEach(() => {
   document.head.innerHTML = ""
   document.documentElement.removeAttribute("data-theme")
+  document.documentElement.removeAttribute("data-rocksoul-skin")
   document.documentElement.removeAttribute("data-color-scheme")
   document.documentElement.style.removeProperty("background-color")
   localStorage.clear()
@@ -21,10 +22,10 @@ beforeEach(() => {
 
 describe("theme preload", () => {
   test.each([
-    { stored: undefined, systemDark: false, scheme: "light", background: "#fafafa" },
-    { stored: "dark", systemDark: false, scheme: "dark", background: "#080808" },
-    { stored: "light", systemDark: true, scheme: "light", background: "#fafafa" },
-    { stored: "system", systemDark: true, scheme: "dark", background: "#080808" },
+    { stored: undefined, systemDark: false, scheme: "light", background: "#f1eee7" },
+    { stored: "dark", systemDark: false, scheme: "dark", background: "#17191b" },
+    { stored: "light", systemDark: true, scheme: "light", background: "#f1eee7" },
+    { stored: "system", systemDark: true, scheme: "dark", background: "#17191b" },
   ])(
     "paints the default theme in $scheme for stored scheme $stored (system dark: $systemDark)",
     ({ stored, systemDark, scheme, background }) => {
@@ -33,7 +34,8 @@ describe("theme preload", () => {
       if (stored) localStorage.setItem("opencode-color-scheme", stored)
       run()
 
-      expect(document.documentElement.dataset.theme).toBe("oc-2")
+      expect(document.documentElement.dataset.theme).toBe("rocksoul-industrial")
+      expect(document.documentElement.dataset.rocksoulSkin).toBe("rocksoul-industrial")
       expect(document.documentElement.dataset.colorScheme).toBe(scheme)
       expect(document.documentElement.style.backgroundColor).toBe(background)
     },
@@ -50,6 +52,7 @@ describe("theme preload", () => {
     run()
 
     expect(document.documentElement.dataset.theme).toBe("nightowl")
+    expect(document.documentElement.dataset.rocksoulSkin).toBeUndefined()
     expect(document.documentElement.dataset.colorScheme).toBe(expected)
     expect(document.getElementById("oc-theme-preload")?.textContent).toContain(css)
   })

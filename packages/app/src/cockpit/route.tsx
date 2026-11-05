@@ -27,7 +27,7 @@ export function Cockpit() {
               <p class="mt-2 max-w-xl text-sm text-v2-text-text-muted">{language.t("cockpit.description")}</p>
             </div>
             <button type="button" onClick={() => navigate("/")} class="inline-flex h-10 items-center gap-2 rounded-[6px] bg-v2-background-bg-contrast px-4 text-sm font-medium text-v2-text-text-contrast hover:opacity-90">
-              <Icon name="arrow-left" size="small" />
+              <Icon name="outline-arrow-left" size="small" />
               {language.t("cockpit.backToWorkspace")}
             </button>
           </div>
@@ -35,22 +35,22 @@ export function Cockpit() {
 
         <section aria-label={language.t("cockpit.metrics")} class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <article data-component="card" class="rounded-[10px] border border-v2-border-border-base bg-v2-background-bg-base p-4">
-            <div class="flex items-center justify-between gap-3"><span class="text-xs text-v2-text-text-muted">{language.t("cockpit.metric.connections")}</span><Icon name="server" size="small" class="text-v2-icon-icon-muted" /></div>
+            <div class="flex items-center justify-between gap-3"><span class="text-xs text-v2-text-text-muted">{language.t("cockpit.metric.connections")}</span><Icon name="monitor" size="small" class="text-v2-icon-icon-muted" /></div>
             <div class="mt-3 text-3xl font-semibold tabular-nums text-v2-text-text-base">{servers.list.length}</div>
             <p class="mt-1 text-xs text-v2-text-text-muted">{language.t("cockpit.metric.connectionsHint")}</p>
           </article>
           <article data-component="card" class="rounded-[10px] border border-v2-border-border-base bg-v2-background-bg-base p-4">
-            <div class="flex items-center justify-between gap-3"><span class="text-xs text-v2-text-text-muted">{language.t("cockpit.metric.sessions")}</span><Icon name="messages-square" size="small" class="text-v2-icon-icon-muted" /></div>
+            <div class="flex items-center justify-between gap-3"><span class="text-xs text-v2-text-text-muted">{language.t("cockpit.metric.sessions")}</span><Icon name="comment" size="small" class="text-v2-icon-icon-muted" /></div>
             <div class="mt-3 text-3xl font-semibold tabular-nums text-v2-text-text-base">{sessionTabs()}</div>
             <p class="mt-1 text-xs text-v2-text-text-muted">{language.t("cockpit.metric.sessionsHint")}</p>
           </article>
           <article data-component="card" class="rounded-[10px] border border-v2-border-border-base bg-v2-background-bg-base p-4">
-            <div class="flex items-center justify-between gap-3"><span class="text-xs text-v2-text-text-muted">{language.t("cockpit.metric.drafts")}</span><Icon name="file-plus" size="small" class="text-v2-icon-icon-muted" /></div>
+            <div class="flex items-center justify-between gap-3"><span class="text-xs text-v2-text-text-muted">{language.t("cockpit.metric.drafts")}</span><Icon name="file-document" size="small" class="text-v2-icon-icon-muted" /></div>
             <div class="mt-3 text-3xl font-semibold tabular-nums text-v2-text-text-base">{draftTabs()}</div>
             <p class="mt-1 text-xs text-v2-text-text-muted">{language.t("cockpit.metric.draftsHint")}</p>
           </article>
           <article data-component="card" class="rounded-[10px] border border-v2-border-border-base bg-v2-background-bg-base p-4">
-            <div class="flex items-center justify-between gap-3"><span class="text-xs text-v2-text-text-muted">{language.t("cockpit.metric.tabs")}</span><Icon name="layers" size="small" class="text-v2-icon-icon-muted" /></div>
+            <div class="flex items-center justify-between gap-3"><span class="text-xs text-v2-text-text-muted">{language.t("cockpit.metric.tabs")}</span><Icon name="window-analytics" size="small" class="text-v2-icon-icon-muted" /></div>
             <div class="mt-3 text-3xl font-semibold tabular-nums text-v2-text-text-base">{tabs.store.length}</div>
             <p class="mt-1 text-xs text-v2-text-text-muted">{language.t("cockpit.metric.tabsHint")}</p>
           </article>
