@@ -82,7 +82,6 @@ describe("compileParallelExecutionBatch", () => {
       generatedAt: "2026-11-05T10:00:00.000Z",
       planPath: "docs/plans/ROCKSOUL-FLOW.plan.md",
       planMarkdown,
-      plan,
       repositoryRevision: revision,
       requests: [
         request("RSF-102", "rocksoul/rsf-102", "102"),
