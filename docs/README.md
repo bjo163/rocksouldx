@@ -16,6 +16,7 @@ This directory contains product-specific documentation for ROCKSOUL DX. The prod
 | [Memory Ledger contract](architecture/ROCKSOUL-FLOW-MEMORY-LEDGER-CONTRACT.md) | Review-only engineering learning, provenance, redaction, and explicit approval. |
 | [Visual DNA profile contract](architecture/ROCKSOUL-FLOW-VISUAL-PROFILE-CONTRACT.md) | Project-scoped references, semantic tokens, visual acceptance, and accessibility rules. |
 | [Workspace Orbit contract](architecture/ROCKSOUL-FLOW-WORKSPACE-ORBIT-CONTRACT.md) | Independent repository identity, declared/inferred edges, and cross-repo permissions. |
+| [Verification evidence contract](architecture/ROCKSOUL-FLOW-VERIFICATION-EVIDENCE-CONTRACT.md) | Exact-revision task/run evidence, status semantics, command exit validation, and human review. |
 | [First integration ADR](architecture/ADR-0001-FLOW-FIRST-INTEGRATION-BOUNDARY.md) | Accepted boundary for the first pure Core parser slice. |
 | [Capability inventory](audits/ROCKSOUL-FLOW-CAPABILITY-INVENTORY.md) | Source-backed snapshot of existing capabilities and FLOW gaps. |
 | [Portable plan format](plans/ROCKSOUL-FLOW-PLAN-FORMAT.md) | Markdown v1 syntax, validation rules, and unknown-field preservation. |
