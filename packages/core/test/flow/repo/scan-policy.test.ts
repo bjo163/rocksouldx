@@ -65,6 +65,17 @@ describe("RepoScanPolicy", () => {
     })
   })
 
+  test("keeps ignored and inaccessible paths distinct from missing files", () => {
+    expect(classifyScanPath({ path: "src/ignored.ts", ignored: true })).toMatchObject({
+      included: false,
+      reason: "vcs-ignored",
+    })
+    expect(classifyScanPath({ path: "docs/private.md", accessible: false })).toMatchObject({
+      included: false,
+      reason: "inaccessible",
+    })
+  })
+
   test("checks canonical absolute path containment without prefix confusion", () => {
     const root = path.resolve("fixture", "repo")
     const inside = path.join(root, "packages", "core")
