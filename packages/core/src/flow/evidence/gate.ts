@@ -12,6 +12,7 @@ export interface ProofRequirement {
 export interface ProofEvidenceRecord {
   readonly id: string
   readonly taskID: string
+  readonly runID: string
   readonly revision: string
   readonly checkID: string
   readonly type: ProofCheckType
@@ -66,7 +67,7 @@ function relativePath(input: string): boolean {
 }
 
 function validRecord(record: ProofEvidenceRecord): string | undefined {
-  if (!record.id.trim() || !record.taskID.trim() || !record.revision.trim() || !record.checkID.trim())
+  if (!record.id.trim() || !record.taskID.trim() || !record.runID.trim() || !record.revision.trim() || !record.checkID.trim())
     return "Evidence identity fields must be non-empty"
   if (!TERMINAL_STATUSES.has(record.status)) return "Evidence status is not recognized"
   if (!Number.isFinite(Date.parse(record.capturedAt))) return "Evidence timestamp must be a valid date"
@@ -108,9 +109,13 @@ export function evaluateProofGate(input: {
   requiredChecks: readonly ProofRequirement[]
   evidence: readonly ProofEvidenceRecord[]
 }): ProofGateResult {
+  const duplicateIDs = new Set(
+    input.requiredChecks
+      .filter((item, index, all) => all.findIndex((candidate) => candidate.id === item.id) !== index)
+      .map((item) => item.id),
+  )
   const checks = input.requiredChecks.map((requirement): ProofCheckResult => {
-    const repeated = input.requiredChecks.findIndex((item) => item.id === requirement.id) !==
-      input.requiredChecks.lastIndexOf(requirement)
+    const repeated = duplicateIDs.has(requirement.id)
     if (!requirement.id.trim() || repeated) {
       return {
         checkID: requirement.id,
