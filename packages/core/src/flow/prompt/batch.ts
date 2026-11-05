@@ -99,8 +99,12 @@ export function compileParallelExecutionBatch(input: {
     if (request.execution.worktreeID && seenWorktrees.has(request.execution.worktreeID))
       reasons.push("Two packet requests share the same worktree ID")
     if (request.execution.worktreeID) seenWorktrees.add(request.execution.worktreeID)
+    const checkoutPath = canonicalWorktreePath(request.execution.checkoutPath)
     const worktreePath = canonicalWorktreePath(request.execution.path)
+    if (!checkoutPath) reasons.push("Primary checkout path must be absolute and canonicalizable")
     if (!worktreePath) reasons.push("Worktree path must be absolute and canonicalizable")
+    if (checkoutPath && worktreePath && (pathContains(checkoutPath, worktreePath) || pathContains(worktreePath, checkoutPath)))
+      reasons.push("Execution worktree must be separate from and outside the primary checkout")
     if (worktreePath && [...seenPaths].some((existing) => pathContains(existing, worktreePath) || pathContains(worktreePath, existing)))
       reasons.push("Two packet requests share or nest physical worktree paths")
     if (worktreePath) seenPaths.add(worktreePath)
@@ -162,9 +166,11 @@ export function compileParallelExecutionBatch(input: {
     else blockedTasks.push({ taskID: request.taskID, reasons: result.reasons })
   }
 
+  const status = diagnostics.length === 0 && blockedTasks.length === 0 && collisions.length === 0 && packets.length > 0 ? "compiled" : "blocked"
   return {
-    status: diagnostics.length === 0 && blockedTasks.length === 0 && collisions.length === 0 && packets.length > 0 ? "compiled" : "blocked",
-    packets,
+    status,
+    // Never expose a partial packet set: callers must receive the entire batch or none of it.
+    packets: status === "compiled" ? packets : [],
     blockedTasks,
     collisions,
     diagnostics,
