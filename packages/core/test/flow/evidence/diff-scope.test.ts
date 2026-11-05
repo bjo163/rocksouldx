@@ -74,6 +74,14 @@ describe("reviewTaskDiffScope", () => {
     expect(result.valid).toBe(false)
   })
 
+  test("marks untracked additions for explicit inspection", () => {
+    const result = reviewTaskDiffScope({
+      task,
+      changes: [{ path: "packages/core/src/flow/new-file.ts", status: "untracked" }],
+    })
+    expect(result.reviews[0]?.status).toBe("untracked-review")
+  })
+
   test("requires both sides of a rename to remain inside scope", () => {
     const result = reviewTaskDiffScope({
       task,
