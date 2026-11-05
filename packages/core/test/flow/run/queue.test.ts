@@ -79,6 +79,7 @@ describe("buildDispatchQueue", () => {
       runs: [],
       maximumConcurrency: 2,
       parallelismAllowed: true,
+      parallelIsolationValid: true,
     })
     expect(result.dispatchCandidates).toEqual(["RSF-102", "RSF-101"])
   })
@@ -90,6 +91,7 @@ describe("buildDispatchQueue", () => {
       runs: [],
       maximumConcurrency: 0,
       parallelismAllowed: true,
+      parallelIsolationValid: true,
     })
     expect(result.valid).toBe(false)
     expect(result.dispatchCandidates).toEqual([])
@@ -106,6 +108,7 @@ describe("buildDispatchQueue", () => {
       ],
       maximumConcurrency: 3,
       parallelismAllowed: true,
+      parallelIsolationValid: true,
     })
     expect(result.blocked).toContainEqual({ taskID: "RSF-101", reasons: ["already-active"] })
   })
