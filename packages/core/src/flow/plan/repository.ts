@@ -1,9 +1,13 @@
+import { Hash } from "@opencode/util/hash"
 import { parsePlanMarkdown, type PlanParseResult, type PlanTaskStatus } from "./plan.js"
 import { normalizeScanPath } from "./repo/scan-policy.js"
 
 export interface PlanDocumentSnapshot {
   readonly path: string
+  /** File/store revision used for compare-and-swap. */
   readonly revision: string
+  /** Git revision of the repository snapshot used by Proof Gate. */
+  readonly repositoryRevision: string
   readonly content: string
 }
 
@@ -41,7 +45,7 @@ export interface PlanVerificationProof {
 }
 
 export interface PlanStatusUpdateResult {
-  readonly status: "updated" | "not-found" | "invalid-plan" | "invalid-transition" | "dependency-blocked" | "proof-required" | "not-authorized" | "conflict"
+  readonly status: "read" | "updated" | "not-found" | "invalid-plan" | "invalid-transition" | "dependency-blocked" | "proof-required" | "not-authorized" | "conflict"
   readonly snapshot?: PlanDocumentSnapshot
   readonly parse?: PlanParseResult
   readonly reason?: string
@@ -63,12 +67,7 @@ const TRANSITIONS: Record<PlanTaskStatus, readonly PlanTaskStatus[]> = {
 }
 
 export function planContentHash(content: string): string {
-  let hash = 0x811c9dc5
-  for (let index = 0; index < content.length; index++) {
-    hash ^= content.charCodeAt(index)
-    hash = Math.imul(hash, 0x01000193)
-  }
-  return (hash >>> 0).toString(16).padStart(8, "0")
+  return Hash.sha256(content)
 }
 
 /** Change one task's status field without reserializing or normalizing any other Markdown. */
@@ -121,7 +120,7 @@ export function createPlanRepository(input: {
     if (snapshot.path !== normalized || !snapshot.revision.trim())
       return { status: "conflict", reason: "Store returned a path or revision that does not match the requested snapshot" }
     const parse = parsePlanMarkdown(snapshot.content)
-    return { status: parse.valid ? "updated" : "invalid-plan", snapshot, parse, ...(parse.valid ? {} : { reason: "Plan document contains validation diagnostics" }) }
+    return { status: parse.valid ? "read" : "invalid-plan", snapshot, parse, ...(parse.valid ? {} : { reason: "Plan document contains validation diagnostics" }) }
   }
 
   const updateStatus = async (request: {
@@ -161,7 +160,7 @@ export function createPlanRepository(input: {
     if (request.status === "verified") {
       const proof = request.proof
       if (
-        !proof || proof.taskID !== task.id || proof.repositoryRevision !== snapshot.revision ||
+        !proof || proof.taskID !== task.id || proof.repositoryRevision !== snapshot.repositoryRevision ||
         !proof.ready || proof.reviewerState !== "accepted" || proof.evidenceIDs.length === 0
       ) return { status: "proof-required", snapshot, parse, reason: "Verified status requires accepted, ready Proof Gate evidence for this task and exact plan revision" }
     }
