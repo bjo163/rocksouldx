@@ -16,7 +16,7 @@ Canonical companion documents:
 - ROCKSOUL-FLOW-REPO-SCAN-POLICY.md
 - ROCKSOUL-FLOW-MANIFEST-INVENTORY.md
 
-This is the canonical task backlog, not a blanket claim that ROCKSOUL FLOW is implemented. The source inventory, overlap matrix, data/evidence contracts, first integration ADR, and portable plan-format specification have been delivered and recorded as verified. The read-only plan parser and focused tests are implemented but not yet verified by an executed test run. All other workflow work remains planned until its code and evidence are recorded.
+This is the canonical task backlog, not a blanket claim that ROCKSOUL FLOW is implemented. The source inventory, overlap matrix, data/evidence contracts, first integration ADR, and portable plan-format specification have been delivered and recorded as verified. The read-only plan parser, repository structure analyzer, requirement evidence retrieval/classifier, plan-overlap analyzer, validation command policy, and workspace relationship validator have implementations and focused tests, but their execution verification remains pending. Other workflow work remains planned until its code and evidence are recorded.
 
 ## Execution contract
 
@@ -164,13 +164,13 @@ This is the canonical task backlog, not a blanket claim that ROCKSOUL FLOW is im
 
 ## RSF-104 — Build the repository structure and module map
 
-- Status: planned
+- Status: implemented
 - Depends on: RSF-102, RSF-103
 - Goal: expose useful package/module boundaries.
 - Scope: workspace packages, entry points, internal imports, tests, and likely domain ownership.
 - Acceptance: map is navigable and revision-bound; generated/vendor noise is suppressed; inferred edges are visually distinct from declared dependencies.
 - Verification: compare module graph against package manifests and import references.
-- Deliverable: project structure model.
+- Deliverable: Revision-bound repository structure/module inventory with package entry points, source/test counts, relative imports, workspace package edges, unresolved imports, and focused tests: ../../packages/core/src/flow/repo/structure.ts and ../../packages/core/test/flow/repo/structure.test.ts
 
 ## RSF-105 — Build the Repo Radar experience
 
@@ -196,33 +196,33 @@ This is the canonical task backlog, not a blanket claim that ROCKSOUL FLOW is im
 
 ## RSF-202 — Build evidence retrieval for requirements
 
-- Status: planned
+- Status: implemented
 - Depends on: RSF-201, RSF-104
 - Goal: find code, tests, docs, config, and existing plans relevant to each requirement.
 - Scope: reuse current file search, symbol/code navigation, and repository inventory; add ranking only where a measurable gap exists.
 - Acceptance: every finding has one or more inspectable references; inaccessible scope is disclosed; no semantic score is treated as proof.
 - Verification: repository fixtures with implemented, partial, missing, and misleading filename cases.
-- Deliverable: evidence retrieval layer.
+- Deliverable: Deterministic lexical requirement-evidence retrieval with revision and line references plus focused tests: ../../packages/core/src/flow/audit/evidence-retrieval.ts and ../../packages/core/test/flow/audit/evidence-retrieval.test.ts
 
 ## RSF-203 — Implement capability classification
 
-- Status: planned
+- Status: implemented
 - Depends on: RSF-202
 - Goal: classify each requirement into implemented, partial, missing, overlap, conflict, or deprecated.
 - Scope: classification rubric, confidence, rationale, evidence, and human-review state.
 - Acceptance: partial work is not mislabeled complete; false positives can be rejected; classifications are reproducible from saved inputs.
 - Verification: labeled fixtures with expected classifications and confidence ranges.
-- Deliverable: classifier and tests.
+- Deliverable: Evidence- and criterion-bound capability finding validator with human-review state and focused tests: ../../packages/core/src/flow/audit/classification.ts and ../../packages/core/test/flow/audit/classification.test.ts
 
 ## RSF-204 — Detect duplicate and conflicting plan tasks
 
-- Status: planned
+- Status: implemented
 - Depends on: RSF-203
 - Goal: prevent duplicate backlog items and incompatible work.
 - Scope: compare task intent, scope, dependencies, affected modules, and acceptance criteria across the active plan.
 - Acceptance: candidate duplicates link to existing IDs; conflict reports explain the collision; no task is automatically deleted.
 - Verification: duplicate, near-duplicate, complementary, and intentionally separate task fixtures.
-- Deliverable: plan overlap analyzer.
+- Deliverable: Conservative duplicate/scope-overlap candidate analyzer with mandatory human review and focused tests: ../../packages/core/src/flow/audit/plan-overlap.ts and ../../packages/core/test/flow/audit/plan-overlap.test.ts
 
 ## RSF-205 — Build the Audit Bench review flow
 
@@ -414,13 +414,13 @@ This is the canonical task backlog, not a blanket claim that ROCKSOUL FLOW is im
 
 ## RSF-602 — Build validation command policy
 
-- Status: planned
+- Status: implemented
 - Depends on: RSF-601, RSF-102
 - Goal: discover and safely select relevant project checks.
 - Scope: use declared package scripts, repo guidance, affected-package mapping, and command allow/approval policy.
 - Acceptance: unknown commands are not run silently; root test restrictions and package-specific commands are honored; skipped checks include a reason.
 - Verification: script discovery fixtures, command approval tests, and no-shell-injection tests.
-- Deliverable: validation planner.
+- Deliverable: Exact manifest-script and package-directory command policy with blocked/review-required states and focused tests: ../../packages/core/src/flow/evidence/command-policy.ts and ../../packages/core/test/flow/evidence/command-policy.test.ts
 
 ## RSF-603 — Collect test, lint, typecheck, and build evidence
 
@@ -560,13 +560,13 @@ This is the canonical task backlog, not a blanket claim that ROCKSOUL FLOW is im
 
 ## RSF-902 — Model explicit cross-repository dependencies
 
-- Status: planned
+- Status: implemented
 - Depends on: RSF-901
 - Goal: represent relationships that the developer explicitly declares.
 - Scope: dependency type, source/target repo, revision references, owner, optional links, and validation status.
 - Acceptance: declared and inferred relationships are distinct; stale revision references are flagged; cycles are visible.
 - Verification: graph fixtures including cycles and missing repos.
-- Deliverable: repository relationship model.
+- Deliverable: Credential-safe remote identity normalization and explicit workspace relationship graph validator with focused tests: ../../packages/core/src/flow/workspace/graph.ts and ../../packages/core/test/flow/workspace/graph.test.ts
 
 ## RSF-903 — Build multi-repository overview
 
