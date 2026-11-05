@@ -60,9 +60,9 @@ export function AppBaseProviders(
 ) {
   return (
     <MetaProvider>
-      <Title>{props.appName ?? "OpenCode"}</Title>
+      <Title>{props.appName ?? "Rocksoul"}</Title>
       <Font />
-      <ThemeProvider defaultTheme={props.defaultTheme} onThemeApplied={(mode, scheme) => props.onThemeApplied?.(mode, scheme)}>
+      <ThemeProvider defaultTheme={props.defaultTheme ?? "rocksoul-industrial"} onThemeApplied={(mode, scheme) => props.onThemeApplied?.(mode, scheme)}>
         <LanguageProvider locale={props.locale} onNativeTranslations={props.onNativeTranslations}>
           <UiI18nBridge>
             <ErrorBoundary
