@@ -37,8 +37,6 @@ export const DEFAULT_EXCLUDED_DIRECTORIES = [
   ".ruff_cache",
   ".gradle",
   "pods",
-  "obj",
-  "bin",
 ] as const
 
 const EXCLUDED_DIRECTORY_SET = new Set<string>(DEFAULT_EXCLUDED_DIRECTORIES)
@@ -116,6 +114,8 @@ export function classifyScanPath(input: { path: string; symlink?: boolean }): Sc
  * Callers must canonicalize real paths before relying on this boundary.
  */
 export function isWithinScanRoot(root: string, candidate: string): boolean {
+  if (!path.isAbsolute(root) || !path.isAbsolute(candidate)) return false
+
   const absoluteRoot = path.resolve(root)
   const absoluteCandidate = path.resolve(candidate)
   const relative = path.relative(absoluteRoot, absoluteCandidate)
