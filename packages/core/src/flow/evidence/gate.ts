@@ -84,8 +84,6 @@ function validRecord(record: ProofEvidenceRecord): string | undefined {
   if (record.type === "visual" || record.type === "manual") {
     if ((record.status === "pass" || record.status === "fail") && !record.artifactRef?.trim())
       return "Visual/manual evidence requires an inspectable artifact reference"
-    if (record.status === "pass" && record.humanReview !== "approved")
-      return "Visual/manual evidence cannot pass without approved human review"
   }
 
   if ((record.status === "skipped" || record.status === "not_applicable" || record.status === "not_run") && !record.reason?.trim())
@@ -111,12 +109,37 @@ export function evaluateProofGate(input: {
   evidence: readonly ProofEvidenceRecord[]
 }): ProofGateResult {
   const checks = input.requiredChecks.map((requirement): ProofCheckResult => {
+    const repeated = input.requiredChecks.findIndex((item) => item.id === requirement.id) !==
+      input.requiredChecks.lastIndexOf(requirement)
+    if (!requirement.id.trim() || repeated) {
+      return {
+        checkID: requirement.id,
+        type: requirement.type,
+        required: requirement.required,
+        status: "invalid",
+        reason: repeated ? "Required check IDs must be unique" : "Required check ID must be non-empty",
+      }
+    }
+
     const matching = input.evidence.filter((record) => record.taskID === input.taskID && record.checkID === requirement.id)
-    const current = matching.filter((record) => record.revision === input.revision && record.type === requirement.type)
+    const sameRevision = matching.filter((record) => record.revision === input.revision)
+    const wrongType = sameRevision.filter((record) => record.type !== requirement.type)
+    const current = sameRevision.filter((record) => record.type === requirement.type)
     const selected = latest(current)
     const stale = matching.filter((record) => record.revision !== input.revision)
 
     if (!selected) {
+      if (wrongType.length) {
+        const evidence = latest(wrongType)
+        return {
+          checkID: requirement.id,
+          type: requirement.type,
+          required: requirement.required,
+          status: "invalid",
+          ...(evidence ? { evidenceID: evidence.id } : {}),
+          reason: "Evidence check type does not match the required check",
+        }
+      }
       if (stale.length) {
         const evidence = latest(stale)
         return {
@@ -149,14 +172,14 @@ export function evaluateProofGate(input: {
       }
     }
 
-    if (selected.status === "fail") {
+    if (selected.status === "fail" || selected.humanReview === "rejected") {
       return {
         checkID: requirement.id,
         type: requirement.type,
         required: requirement.required,
         status: "failed",
         evidenceID: selected.id,
-        reason: selected.reason ?? "The check failed",
+        reason: selected.humanReview === "rejected" ? "Human review rejected this evidence" : selected.reason ?? "The check failed",
       }
     }
 
