@@ -114,3 +114,9 @@ Run tests from the relevant package directory rather than the repository root. T
 ROCKSOUL DX is based on [anomalyco/opencode](https://github.com/anomalyco/opencode). The upstream project provides the underlying coding-agent foundation and retains its own identity, ownership, and community. ROCKSOUL DX-specific product work is maintained independently in this repository.
 
 This repository is distributed under the MIT License. Preserve upstream copyright notices, license files, attribution, and third-party notices when making changes. See [LICENSE](LICENSE) and [SECURITY.md](SECURITY.md).
+
+## UI delivery: Stages 0–3
+
+The first Rocksoul UI delivery adds the Industrial, Punk and Workbench skins, the refreshed desktop/web identity, and the Cockpit route. The implementation audit, brand rules, stage notes and follow-up backlog are documented in [docs/rocksoul](docs/rocksoul/).
+
+The FLOW architecture and its capability roadmap remain the product foundation; the UI work is additive and does not replace the FLOW plan or runtime boundaries.
