@@ -1,3 +1,5 @@
+import { normalizeScanPath } from "./scan-policy.js"
+
 export type PackageManager =
   | "bun"
   | "npm"
@@ -204,14 +206,20 @@ function languageSignals(filePath: string): string[] {
   const basename = filePath.split("/").at(-1)?.toLowerCase()
   if (!basename) return []
 
-  if (basename === "package.json" || basename === "bun.lock" || basename === "bun.lockb") return ["JavaScript"]
-  if (basename === "tsconfig.json" || basename === "jsconfig.json") return ["TypeScript"]
+  if (
+    ["package.json", "bun.lock", "bun.lockb", "package-lock.json", "npm-shrinkwrap.json", "pnpm-lock.yaml", "yarn.lock"].includes(
+      basename,
+    )
+  )
+    return ["JavaScript"]
+  if (basename === "tsconfig.json") return ["TypeScript"]
+  if (basename === "jsconfig.json") return ["JavaScript"]
   if (basename === "cargo.toml" || basename === "cargo.lock") return ["Rust"]
   if (basename === "go.mod" || basename === "go.sum") return ["Go"]
   if (["pyproject.toml", "requirements.txt", "pipfile", "pipfile.lock", "poetry.lock", "uv.lock"].includes(basename))
     return ["Python"]
-  if (basename === "pom.xml" || basename.startsWith("build.gradle") || basename.startsWith("settings.gradle"))
-    return ["Java"]
+  if (basename.endsWith(".kts")) return ["Kotlin"]
+  if (basename === "pom.xml" || basename === "build.gradle" || basename === "settings.gradle") return ["Java"]
   if (basename.endsWith(".csproj") || basename.endsWith(".sln") || basename === "global.json") return ["C#"]
   if (basename === "gemfile" || basename === "gemfile.lock") return ["Ruby"]
   if (basename === "composer.json" || basename === "composer.lock") return ["PHP"]
@@ -295,8 +303,8 @@ function packageInfo(file: ManifestFile, warnings: ManifestWarning[]): PackageMa
 export function analyzeManifestInventory(files: readonly ManifestFile[]): ManifestInventory {
   const normalized = files
     .flatMap((file) => {
-      const path = file.path.replaceAll("\\", "/").replace(/^\.\//, "")
-      if (!path || path.startsWith("/") || path.split("/").includes("..")) return []
+      const path = normalizeScanPath(file.path)
+      if (!path) return []
       const basename = path.split("/").at(-1) ?? ""
       if (!MANIFEST_NAMES.has(basename) && !basename.endsWith(".csproj") && !basename.endsWith(".sln")) return []
       return [{ ...file, path }]
