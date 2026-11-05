@@ -13,6 +13,7 @@ Canonical companion documents:
 - ROCKSOUL-FLOW-PLAN-FORMAT.md
 - ROCKSOUL-FLOW-PARALLEL-WORKSTREAMS.md
 - ROCKSOUL-FLOW-EXECUTION-PACKET.md
+- ROCKSOUL-FLOW-REPO-SCAN-POLICY.md
 
 This is the canonical task backlog, not a blanket claim that ROCKSOUL FLOW is implemented. The source inventory, overlap matrix, data/evidence contracts, first integration ADR, and portable plan-format specification have been delivered and recorded as verified. The read-only plan parser and focused tests are implemented but not yet verified by an executed test run. All other workflow work remains planned until its code and evidence are recorded.
 
@@ -132,13 +133,13 @@ This is the canonical task backlog, not a blanket claim that ROCKSOUL FLOW is im
 
 ## RSF-101 — Define repository snapshot inputs and ignore policy
 
-- Status: planned
+- Status: implemented
 - Depends on: RSF-004
 - Goal: define a safe, deterministic scan boundary.
 - Scope: repository root resolution, Git revision/dirty state, ignore precedence, generated/vendor/binary exclusions, and inaccessible-path reporting.
 - Acceptance: scan cannot escape the selected project root; ignored and sensitive paths are excluded by default; incomplete scans are explicit.
 - Verification: fixtures for nested roots, symlinks, ignored paths, generated directories, and inaccessible files.
-- Deliverable: scanner input contract and tests.
+- Deliverable: scan boundary/policy spec and focused helper/tests: ROCKSOUL-FLOW-REPO-SCAN-POLICY.md, ../../packages/core/src/flow/repo/scan-policy.ts, and ../../packages/core/test/flow/repo/scan-policy.test.ts
 
 ## RSF-102 — Implement manifest and toolchain inventory
 
@@ -605,4 +606,4 @@ A task can be marked verified only when all applicable items below are satisfied
 
 ## Current implementation note
 
-The existing codebase already has a Plan agent, session TODO tool, worktree support, plugins/MCP, image generation, terminal, code review, and session/subagent infrastructure. These are reuse points, not tasks to rebuild. M0 source audit, overlap analysis, data/evidence contracts, and the first integration ADR are verified. RSF-301 and RSF-401 are verified, including the execution packet golden fixture. RSF-302 has a pure read-only parser and eight focused test cases committed, but remains implemented rather than verified until Bun executes those tests. Next work should follow the parallel workstreams: Repo Radar scan contracts, requirement decomposition, and the remaining Plan Forge safe-read/write work.
+The existing codebase already has a Plan agent, session TODO tool, worktree support, plugins/MCP, image generation, terminal, code review, and session/subagent infrastructure. These are reuse points, not tasks to rebuild. M0 source audit, overlap analysis, data/evidence contracts, and the first integration ADR are verified. RSF-301 and RSF-401 are verified, including the execution packet golden fixture. RSF-302 has a pure read-only parser and eight focused test cases committed. RSF-101 has a repository scan-policy helper, contract, and six focused test cases. Both remain implemented rather than verified until Bun executes the tests and the integration behavior is reviewed. Next work should follow the parallel workstreams: Repo Radar scan contracts, requirement decomposition, and the remaining Plan Forge safe-read/write work.
