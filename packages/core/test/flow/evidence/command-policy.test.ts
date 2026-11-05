@@ -7,6 +7,7 @@ const scripts: PackageScript[] = [
   { packagePath: "packages/core", name: "typecheck", command: "bun run typecheck", intent: "typecheck" },
   { packagePath: "packages/core", name: "publish", command: "npm publish", intent: "other" },
   { packagePath: "packages/core", name: "docs", command: "bun run docs:sync", intent: "other" },
+  { packagePath: "packages/core", name: "secret", command: "deploy TOKEN=[REDACTED]", intent: "other", redacted: true },
   { packagePath: "", name: "lint", command: "bun run lint", intent: "lint" },
 ]
 
@@ -38,6 +39,14 @@ describe("assessValidationCommand", () => {
   test("blocks destructive and release commands even when declared", () => {
     expect(assessValidationCommand({
       command: "npm publish",
+      workingDirectory: "packages/core",
+      scripts,
+    }).status).toBe("blocked")
+  })
+
+  test("blocks scripts whose source command was redacted", () => {
+    expect(assessValidationCommand({
+      command: "deploy TOKEN=[REDACTED]",
       workingDirectory: "packages/core",
       scripts,
     }).status).toBe("blocked")
