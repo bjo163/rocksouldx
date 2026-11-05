@@ -45,6 +45,7 @@ const repo = {
 }
 const execution = {
   worktreeID: "worktree-a",
+  checkoutPath: "/tmp/repo",
   path: "/tmp/repo-worktrees/task-102",
   baseRevision: "a".repeat(40),
   writerIsolationValid: true,
@@ -103,6 +104,7 @@ describe("compileExecutionPrompt", () => {
     expect(compile({ repository: { ...repo, dirtyState: "dirty", dirtyPaths: ["README.md"] } })).toMatchObject({ status: "blocked" })
     expect(compile({ execution: { ...execution, writerIsolationValid: false } })).toMatchObject({ status: "blocked" })
     expect(compile({ execution: { ...execution, activeWriterCount: 1 } })).toMatchObject({ status: "blocked" })
+    expect(compile({ execution: { ...execution, path: "/tmp/repo/.worktrees/task-102" } })).toMatchObject({ status: "blocked" })
   })
 
   test("requires manifest-approved required commands at exact revisions", () => {
