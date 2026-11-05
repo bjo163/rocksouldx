@@ -88,7 +88,10 @@ function resolveRelativeImport(from: string, specifier: string, known: ReadonlyS
   return resolveFile(base, known)
 }
 
-function findPackageManifest(files: ReadonlyMap<string, RepositoryStructureFile>, root: string) {
+function findPackageManifest(
+  files: ReadonlyMap<string, RepositoryStructureFile>,
+  root: string,
+): { manifestPath?: string; manifest?: Record<string, unknown> } {
   const manifestPath = root + "/package.json"
   const file = files.get(manifestPath)
   return file ? { manifestPath, manifest: parseManifest(file.content) } : {}
@@ -157,16 +160,6 @@ export function analyzeRepositoryStructure(input: {
 
     const packageFiles = [...fileMap.keys()].filter((relative) => isInside(root, relative))
     const sourceFiles = packageFiles.filter((relative) => SOURCE_FILE.test(relative))
-    const dependencies = [
-      manifest?.dependencies,
-      manifest?.devDependencies,
-      manifest?.peerDependencies,
-      manifest?.optionalDependencies,
-    ].filter(isRecord).flatMap((group) => Object.keys(group))
-    const declaredWorkspaceDependencies = [...new Set(dependencies.flatMap((dependency) => {
-      const target = packageNames.get(dependency)
-      return target && target !== root ? [target] : []
-    }))].toSorted()
 
     if (found.manifestPath && !manifest) warnings.push("Invalid or unreadable package manifest: " + found.manifestPath)
     return {
@@ -176,7 +169,7 @@ export function analyzeRepositoryStructure(input: {
       entryPoints: [...entryPoints].toSorted(),
       sourceFileCount: sourceFiles.length,
       testFileCount: sourceFiles.filter((relative) => TEST_FILE.test(relative)).length,
-      declaredWorkspaceDependencies,
+      declaredWorkspaceDependencies: [],
     }
   })
 
@@ -221,7 +214,8 @@ export function analyzeRepositoryStructure(input: {
   const unassignedSourceFiles = [...fileMap.keys()]
     .filter((relative) => SOURCE_FILE.test(relative) && !roots.some((root) => isInside(root, relative)))
     .toSorted()
-  const rootDirectories = [...new Set([...fileMap.keys()].map((relative) => relative.split("/")[0] ?? ""))]
+  const rootDirectories = [...new Set([...fileMap.keys()]
+    .flatMap((relative) => relative.includes("/") ? [relative.split("/")[0] ?? ""] : []))]
     .filter(Boolean)
     .toSorted()
 
