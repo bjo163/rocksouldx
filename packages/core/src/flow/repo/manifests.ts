@@ -328,7 +328,7 @@ export function analyzeManifestInventory(files: readonly ManifestFile[]): Manife
     if (!name || !EXPLICIT_MANAGERS.has(name as PackageManager)) {
       warnings.push({
         code: "unsupported-package-manager",
-        message: `Unsupported packageManager value: ${item.value}`,
+        message: "Package manifest declares an unsupported packageManager value",
         path: item.path,
       })
       continue
