@@ -1,1 +1,7 @@
-../../ui/src/assets/favicon/favicon.svg
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <rect width="512" height="512" rx="76" fill="#17191B"/>
+  <path d="M112 86h174c82 0 132 47 132 124 0 57-29 96-81 114l88 102H311l-75-88h-44v88h-80V86Zm80 78v103h91c34 0 54-17 54-51 0-35-20-52-54-52h-91Z" fill="#F1EDE4"/>
+  <path d="M112 86h24v440h-24z" fill="#E17A3D"/>
+  <path d="M112 86h82v22h-82z" fill="#E17A3D"/>
+  <path d="M116 427h246v-24H116z" fill="#E17A3D" opacity=".9"/>
+</svg>

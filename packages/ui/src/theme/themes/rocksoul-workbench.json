@@ -1,0 +1,35 @@
+{
+  "$schema": "https://opencode.ai/desktop-theme.json",
+  "name": "Rocksoul Workbench",
+  "id": "rocksoul-workbench",
+  "light": {
+    "palette": {
+      "neutral": "#f2f5f8",
+      "ink": "#202b36",
+      "primary": "#416f94",
+      "accent": "#6b879e",
+      "success": "#397b62",
+      "warning": "#9a783a",
+      "error": "#a64e52",
+      "info": "#426f94",
+      "interactive": "#416f94",
+      "diffAdd": "#4b936b",
+      "diffDelete": "#bd5c61"
+    }
+  },
+  "dark": {
+    "palette": {
+      "neutral": "#151d25",
+      "ink": "#dce5ed",
+      "primary": "#79a9d1",
+      "accent": "#9bb7cb",
+      "success": "#70b58f",
+      "warning": "#d5b06b",
+      "error": "#e17e81",
+      "info": "#82b1d6",
+      "interactive": "#79a9d1",
+      "diffAdd": "#78c396",
+      "diffDelete": "#e27f83"
+    }
+  }
+}

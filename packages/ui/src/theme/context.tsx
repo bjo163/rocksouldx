@@ -63,7 +63,10 @@ function knownThemes() {
 
 const names = new Map(
   Object.entries({
-    "oc-2": "OpenCode",
+    "oc-2": "Rocksoul Classic",
+    "rocksoul-industrial": "Rocksoul Industrial",
+    "rocksoul-punk": "Rocksoul Punk",
+    "rocksoul-workbench": "Rocksoul Workbench",
     amoled: "AMOLED",
     aura: "Aura",
     ayu: "Ayu",
@@ -174,6 +177,8 @@ function applyThemeCss(theme: DesktopTheme, themeId: string, mode: "light" | "da
   document.getElementById("oc-theme-preload")?.remove()
   ensureThemeStyleElement().textContent = fullCss
   document.documentElement.dataset.theme = themeId
+  if (themeId.startsWith("rocksoul-")) document.documentElement.dataset.rocksoulSkin = themeId
+  else delete document.documentElement.dataset.rocksoulSkin
   document.documentElement.dataset.colorScheme = mode
   document.documentElement.style.backgroundColor = isDark ? "#080808" : "#fafafa"
 
@@ -204,7 +209,7 @@ export const { use: useTheme, provider: ThemeProvider } = createSimpleContext({
     onThemeApplied?: (mode: "light" | "dark", scheme: ColorScheme) => void
   }) => {
     // An id no theme has yet stays selected until `settle`: a registered theme can arrive after startup.
-    const themeId = read(STORAGE_KEYS.THEME_ID) || props.defaultTheme || "oc-2"
+    const themeId = read(STORAGE_KEYS.THEME_ID) || props.defaultTheme || "rocksoul-industrial"
     const colorScheme = readScheme()
     const mode = colorScheme === "system" ? getSystemMode() : colorScheme
 
@@ -310,7 +315,7 @@ export const { use: useTheme, provider: ThemeProvider } = createSimpleContext({
 
       makeEventListener(mediaQuery, "change", onMedia)
 
-      const savedTheme = read(STORAGE_KEYS.THEME_ID) || props.defaultTheme || "oc-2"
+      const savedTheme = read(STORAGE_KEYS.THEME_ID) || props.defaultTheme || "rocksoul-industrial"
       const savedScheme = readScheme()
 
       if (savedTheme !== store.themeId) setStore("themeId", savedTheme)

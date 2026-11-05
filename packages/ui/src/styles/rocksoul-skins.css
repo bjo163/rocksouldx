@@ -1,0 +1,30 @@
+:root {
+  --rocksoul-radius-panel: 10px;
+  --rocksoul-radius-card: 10px;
+  --rocksoul-border-width: 1px;
+}
+:root[data-rocksoul-skin="rocksoul-industrial"] {
+  --rocksoul-radius-panel: 5px;
+  --rocksoul-radius-card: 6px;
+  --rocksoul-border-width: 1px;
+}
+:root[data-rocksoul-skin="rocksoul-punk"] {
+  --rocksoul-radius-panel: 2px;
+  --rocksoul-radius-card: 2px;
+  --rocksoul-border-width: 2px;
+}
+:root[data-rocksoul-skin="rocksoul-workbench"] {
+  --rocksoul-radius-panel: 12px;
+  --rocksoul-radius-card: 12px;
+  --rocksoul-border-width: 1px;
+}
+:root[data-rocksoul-skin] [data-slot="home-panel"] {
+  border-radius: var(--rocksoul-radius-panel);
+}
+:root[data-rocksoul-skin] [data-component="card"] {
+  border-radius: var(--rocksoul-radius-card);
+  border-width: var(--rocksoul-border-width);
+}
+:root[data-rocksoul-skin="rocksoul-punk"] [data-component="card"] {
+  border-style: dashed;
+}

@@ -1,4 +1,5 @@
 import { createMemo, For, type JSX, onCleanup, Show, splitProps } from "solid-js"
+import { useNavigate } from "@solidjs/router"
 import { createStore } from "solid-js/store"
 import { createResizeObserver } from "@solid-primitives/resize-observer"
 import { Popover } from "@kobalte/core/popover"
@@ -159,6 +160,7 @@ export function HomeProjectsView(props: HomeProjectsViewProps) {
 }
 
 function HomeProjectsPanel(props: HomeProjectsViewProps) {
+  const navigate = useNavigate()
   let observer: MutationObserver | undefined
   let frame = 0
   const [contextMenu, setContextMenu] = createStore<{ open: string | undefined }>({ open: undefined })
@@ -328,6 +330,7 @@ function HomeProjectsPanel(props: HomeProjectsViewProps) {
         class="mb-8 mt-4 hidden shrink-0 lg:flex"
         onOpenSettings={props.onOpenSettings}
         onOpenHelp={props.onOpenHelp}
+        onOpenCockpit={() => navigate("/cockpit")}
         language={props.language}
       />
     </aside>
@@ -338,6 +341,7 @@ export function HomeUtilityNav(props: {
   class?: string
   onOpenSettings: () => void
   onOpenHelp: () => void
+  onOpenCockpit: () => void
   language: ReturnType<typeof useLanguage>
 }) {
   return (
@@ -351,6 +355,14 @@ export function HomeUtilityNav(props: {
       >
         <Icon name="settings-gear" size="small" />
         <span class={HOME_PROJECT_NAV_LABEL}>{props.language.t("sidebar.settings")}</span>
+      </HomeProjectNavButton>
+      <HomeProjectNavButton
+        type="button"
+        class="text-v2-text-text-faint [&>[data-slot=icon-svg]]:text-v2-icon-icon-muted"
+        onClick={props.onOpenCockpit}
+      >
+        <Icon name="layout-dashboard" size="small" />
+        <span class={HOME_PROJECT_NAV_LABEL}>{props.language.t("cockpit.nav")}</span>
       </HomeProjectNavButton>
       <HomeProjectNavButton
         type="button"

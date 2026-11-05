@@ -1,0 +1,35 @@
+{
+  "$schema": "https://opencode.ai/desktop-theme.json",
+  "name": "Rocksoul Industrial",
+  "id": "rocksoul-industrial",
+  "light": {
+    "palette": {
+      "neutral": "#f1eee7",
+      "ink": "#282724",
+      "primary": "#b95b32",
+      "accent": "#b89a5a",
+      "success": "#347b55",
+      "warning": "#a97528",
+      "error": "#b9433c",
+      "info": "#456e91",
+      "interactive": "#b4512b",
+      "diffAdd": "#4e9766",
+      "diffDelete": "#cf5b50"
+    }
+  },
+  "dark": {
+    "palette": {
+      "neutral": "#17191b",
+      "ink": "#e2ddd3",
+      "primary": "#e17a3d",
+      "accent": "#c6ad70",
+      "success": "#78bd8d",
+      "warning": "#e3b35b",
+      "error": "#f07870",
+      "info": "#7ca8cc",
+      "interactive": "#e17a3d",
+      "diffAdd": "#7ec493",
+      "diffDelete": "#f07b72"
+    }
+  }
+}
