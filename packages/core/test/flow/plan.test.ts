@@ -145,6 +145,12 @@ ${task({ id: "RSF-102", title: "Second task", dependencies: "RSF-101" })}`
 
     expect(result.valid).toBe(false)
     expect(result.diagnostics.map((item) => item.code)).toContain("invalid-dependency")
+    expect(result.diagnostics).toContainEqual(
+      expect.objectContaining({
+        code: "invalid-dependency",
+        line: 4,
+      }),
+    )
   })
 
   test("does not rewrite the input Markdown and reports an empty plan", () => {
