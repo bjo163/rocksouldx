@@ -7,6 +7,7 @@ const requirement: ProofRequirement = { id: "core-test", type: "test", required:
 const evidence = (input: Partial<ProofEvidenceRecord> = {}): ProofEvidenceRecord => ({
   id: "proof-001",
   taskID: "RSF-603",
+  runID: "run-001",
   revision: "abc123",
   checkID: "core-test",
   type: "test",
