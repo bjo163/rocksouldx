@@ -47,11 +47,35 @@ ${task({ id: "RSF-102", title: "Second task", dependencies: "RSF-101" })}`
       status: "planned",
       dependsOn: [],
       metadata: { Owner: "Radar lane" },
+      fieldLines: { Status: 7, "Depends on": 8 },
     })
     expect(result.tasks[0]?.raw).toContain("- Owner: Radar lane")
     expect(result.tasks[0]?.line).toBeGreaterThan(1)
     expect(result.tasks[0]?.endLine).toBeLessThan(result.tasks[1]?.line ?? 0)
     expect(result.tasks[1]?.dependsOn).toEqual(["RSF-101"])
+  })
+
+  test("reports task-like headings that do not follow the documented format", () => {
+    const source = `## RSF-123 Missing separator
+
+- Status: planned
+- Depends on: none
+- Goal: A goal.
+- Scope: One scope.
+- Acceptance: One criterion.
+- Verification: Run the focused test.
+- Deliverable: One artifact.
+`
+    const result = parsePlanMarkdown(source)
+
+    expect(result.tasks).toHaveLength(1)
+    expect(result.diagnostics).toContainEqual(
+      expect.objectContaining({
+        code: "malformed-task-heading",
+        taskID: "RSF-123",
+        line: 1,
+      }),
+    )
   })
 
   test("reports task IDs that are duplicated", () => {
@@ -70,6 +94,7 @@ ${task({ id: "RSF-102", title: "Second task", dependencies: "RSF-101" })}`
         code: "missing-dependency",
         taskID: "RSF-101",
         dependencyID: "RSF-999",
+        line: 4,
       }),
     )
   })
