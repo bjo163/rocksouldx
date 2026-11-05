@@ -129,7 +129,7 @@ function taskSections(lines: readonly string[]): TaskSection[] {
 }
 
 function cycles(tasks: readonly PlanTask[]): Array<{ ids: string[]; line: number }> {
-  const byID = new Map(tasks.map((task) => [task.id, task]))
+  const byID = new Map<string, PlanTask>(tasks.map((task): [string, PlanTask] => [task.id, task]))
   const state = new Map<string, "visiting" | "visited">()
   const stack: string[] = []
   const found = new Map<string, { ids: string[]; line: number }>()
@@ -264,7 +264,7 @@ export function parsePlanMarkdown(markdown: string): PlanParseResult {
     return {
       id: section.id,
       title: section.title,
-      status,
+      ...(status ? { status } : {}),
       dependsOn,
       fields,
       metadata,
@@ -308,7 +308,7 @@ export function parsePlanMarkdown(markdown: string): PlanParseResult {
       code: "dependency-cycle",
       message: `Dependency cycle detected: ${cycle.ids.join(" -> ")}`,
       line: cycle.line,
-      taskID: cycle.ids[0],
+      taskID: cycle.ids[0] ?? "unknown",
     })
   }
 
