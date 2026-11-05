@@ -138,7 +138,7 @@ export function compileExecutionPrompt(input: {
     reasons.push("Project, checkout, and branch identities are required")
   if (input.repository.remoteIdentity && !normalizeRemoteIdentity(input.repository.remoteIdentity))
     reasons.push("Remote identity must be normalized and credential-free")
-  if ([input.packetID, input.repository.projectID, input.repository.checkoutID, input.repository.branch, input.execution.path].some((value) => /[\\u0000-\\u001f\\u007f]/.test(value)))
+  if ([input.packetID, input.repository.projectID, input.repository.checkoutID, input.repository.branch, input.execution.path].some((value) => /[\x00-\x1f\x7f]/.test(value)))
     reasons.push("Packet, project, checkout, branch, and worktree fields cannot contain control characters")
   if (input.repository.dirtyState !== "clean" || input.repository.dirtyPaths.length > 0)
     reasons.push("Repository checkout must be clean before packet compilation")
