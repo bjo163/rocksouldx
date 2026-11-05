@@ -88,6 +88,19 @@ ${task({ id: "RSF-102", title: "Second task", dependencies: "RSF-101" })}`
     expect(result.diagnostics.filter((item) => item.code === "missing-required-field")).toHaveLength(4)
   })
 
+  test("rejects blank required values and empty dependency declarations", () => {
+    const source = task({ id: "RSF-101", status: "", dependencies: "" }).replace(
+      "- Acceptance:\n  - The behavior is observable.",
+      "- Acceptance:",
+    )
+    const result = parsePlanMarkdown(source)
+
+    expect(result.valid).toBe(false)
+    expect(result.diagnostics.map((item) => item.code)).toContain("invalid-status")
+    expect(result.diagnostics.map((item) => item.code)).toContain("invalid-dependency")
+    expect(result.diagnostics.map((item) => item.code)).toContain("empty-required-field")
+  })
+
   test("reports dependency cycles", () => {
     const source =
       task({ id: "RSF-101", dependencies: "RSF-102" }) +
