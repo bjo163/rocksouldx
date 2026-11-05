@@ -186,13 +186,13 @@ This is the canonical task backlog, not a blanket claim that ROCKSOUL FLOW is im
 
 ## RSF-201 — Define requirement decomposition
 
-- Status: planned
+- Status: implemented
 - Depends on: RSF-003
 - Goal: convert a feature request into reviewable requirement units.
 - Scope: requirement IDs, expected behavior, explicit constraints, non-goals, and unresolved questions.
 - Acceptance: vague requirements remain unresolved rather than being silently guessed; original user intent remains traceable.
 - Verification: fixtures for complete, ambiguous, contradictory, and multi-part requests.
-- Deliverable: requirement model.
+- Deliverable: pure requirement validator, focused tests, and contract: ../../packages/core/src/flow/audit/requirements.ts, ../../packages/core/test/flow/audit/requirements.test.ts, and ../architecture/ROCKSOUL-FLOW-REQUIREMENT-CONTRACT.md
 
 ## RSF-202 — Build evidence retrieval for requirements
 
@@ -607,4 +607,4 @@ A task can be marked verified only when all applicable items below are satisfied
 
 ## Current implementation note
 
-The existing codebase already has a Plan agent, session TODO tool, worktree support, plugins/MCP, image generation, terminal, code review, and session/subagent infrastructure. These are reuse points, not tasks to rebuild. M0 source audit, overlap analysis, data/evidence contracts, and the first integration ADR are verified. RSF-301 and RSF-401 are verified, including the execution packet golden fixture. RSF-302 has a pure read-only parser and nine focused test cases; RSF-101 has a repository scan-policy helper, contract, and six focused test cases; RSF-102 has a pure manifest analyzer, contract, and seven focused test cases; RSF-103 has a path-only documentation inventory and hierarchical guidance resolver with four focused test cases. All four remain implemented rather than verified until Bun executes the tests and integration behavior is reviewed. Next work should follow the parallel workstreams: Repo Radar scan contracts, requirement decomposition, and the remaining Plan Forge safe-read/write work.
+The existing codebase already has a Plan agent, session TODO tool, worktree support, plugins/MCP, image generation, terminal, code review, and session/subagent infrastructure. These are reuse points, not tasks to rebuild. M0 source audit, overlap analysis, data/evidence contracts, and the first integration ADR are verified. RSF-301 and RSF-401 are verified, including the execution packet golden fixture. RSF-302 has a pure read-only parser and nine focused test cases; RSF-101 has a repository scan-policy helper, contract, and six focused test cases; RSF-102 has a pure manifest analyzer, contract, and seven focused test cases; RSF-103 has a path-only documentation inventory and hierarchical guidance resolver with four focused test cases; RSF-201 has a pure requirement validator and six focused test cases. All five remain implemented rather than verified until Bun executes the tests and integration behavior is reviewed. Next work should follow the parallel workstreams: Repo Radar scan contracts, requirement decomposition, and the remaining Plan Forge safe-read/write work.
