@@ -12,6 +12,7 @@ This directory contains product-specific documentation for ROCKSOUL DX. The prod
 | [ROCKSOUL FLOW architecture](architecture/ROCKSOUL-FLOW-ARCHITECTURE.md) | Integration strategy, reuse map, boundaries, data ownership, safety, and technical decision gates. |
 | [FLOW feature overlap matrix](architecture/ROCKSOUL-FLOW-OVERLAP-MATRIX.md) | Evidence-based decisions about what to reuse, extend, build, defer, or reject. |
 | [FLOW data and evidence contracts](architecture/ROCKSOUL-FLOW-DATA-CONTRACTS.md) | Revision identity, Markdown plans, task/run records, evidence, learning, visual profiles, and repository edges. |
+| [Requirement decomposition contract](architecture/ROCKSOUL-FLOW-REQUIREMENT-CONTRACT.md) | Explicit requirement units, unresolved questions, and no-invention validation rules. |
 | [First integration ADR](architecture/ADR-0001-FLOW-FIRST-INTEGRATION-BOUNDARY.md) | Accepted boundary for the first pure Core parser slice. |
 | [Capability inventory](audits/ROCKSOUL-FLOW-CAPABILITY-INVENTORY.md) | Source-backed snapshot of existing capabilities and FLOW gaps. |
 | [Portable plan format](plans/ROCKSOUL-FLOW-PLAN-FORMAT.md) | Markdown v1 syntax, validation rules, and unknown-field preservation. |
