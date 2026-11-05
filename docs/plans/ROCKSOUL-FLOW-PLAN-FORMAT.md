@@ -102,7 +102,7 @@ Required diagnostics:
 - invalid dependency syntax or empty dependency declaration;
 - dependency ID not found;
 - dependency cycle;
-- empty task title or no task sections.
+- no task sections.
 
 An invalid plan remains readable. The parser must not repair, delete, reorder, rewrite, or silently skip malformed sections.
 
