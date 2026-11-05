@@ -183,3 +183,12 @@ Each decision must include the alternatives considered, affected modules, data o
 - Test recovery from interrupted scans, plan writes, task dispatch, and verification.
 - Verify keyboard access, responsive layouts, reduced motion, and the ROCKSOUL theme.
 - Keep upstream synchronization manageable and product-specific changes isolated.
+
+
+## 10. Accepted first implementation boundary
+
+The first implementation boundary is accepted in [ADR-0001](ADR-0001-FLOW-FIRST-INTEGRATION-BOUNDARY.md): a pure, read-only Markdown task parser and validator inside the existing Core package. It does not add a database table, new package, Server/Protocol API, generated Client SDK surface, or application route.
+
+The source-backed [capability inventory](../audits/ROCKSOUL-FLOW-CAPABILITY-INVENTORY.md), [feature overlap matrix](ROCKSOUL-FLOW-OVERLAP-MATRIX.md), and [data/evidence contracts](ROCKSOUL-FLOW-DATA-CONTRACTS.md) are the current reference set for implementation ownership. The [portable Markdown plan format](../plans/ROCKSOUL-FLOW-PLAN-FORMAT.md) describes the parser's v1 input contract. The [parallel workstreams](../plans/ROCKSOUL-FLOW-PARALLEL-WORKSTREAMS.md) document the lane ownership and concurrency constraints.
+
+The first parser slice is implemented in `packages/core/src/flow/plan.ts` with focused tests in `packages/core/test/flow/plan.test.ts`. It remains implemented—not verified—until the repository's Bun test and typecheck gates execute successfully. File writes, persistence, app UI, dispatch, and multi-agent coordination remain separate tasks.
