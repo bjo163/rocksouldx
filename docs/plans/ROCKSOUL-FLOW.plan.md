@@ -404,13 +404,13 @@ This is the canonical task backlog, not a blanket claim that ROCKSOUL FLOW is im
 
 ## RSF-601 — Define verification evidence contract
 
-- Status: planned
+- Status: implemented
 - Depends on: RSF-003, RSF-401
 - Goal: make checks and proof states explicit.
 - Scope: check type, command, scope, timestamp, exit code, status, output reference, skip reason, and reviewer state.
 - Acceptance: pass/fail/skipped/not-applicable/not-run are distinct; evidence is tied to repository revision and task run.
 - Verification: evidence schema fixtures and serialization tests.
-- Deliverable: evidence contract.
+- Deliverable: task/run/revision-bound evidence evaluator, focused tests, and contract: ../../packages/core/src/flow/evidence/gate.ts, ../../packages/core/test/flow/evidence/gate.test.ts, and ../architecture/ROCKSOUL-FLOW-VERIFICATION-EVIDENCE-CONTRACT.md
 
 ## RSF-602 — Build validation command policy
 
@@ -607,4 +607,4 @@ A task can be marked verified only when all applicable items below are satisfied
 
 ## Current implementation note
 
-The existing codebase already has a Plan agent, session TODO tool, worktree support, plugins/MCP, image generation, terminal, code review, and session/subagent infrastructure. These are reuse points, not tasks to rebuild. M0 source audit, overlap analysis, data/evidence contracts, and the first integration ADR are verified. RSF-301 and RSF-401 are verified, including the execution packet golden fixture. RSF-302 has a pure read-only parser and nine focused test cases; RSF-101 has a repository scan-policy helper, contract, and six focused test cases; RSF-102 has a pure manifest analyzer, contract, and seven focused test cases; RSF-103 has a path-only documentation inventory and hierarchical guidance resolver with four focused test cases; RSF-201 has a pure requirement validator and six focused test cases. RSF-701, RSF-801, and RSF-901 now have separate review-only memory, project visual profile, and workspace identity contracts. These eight implementation/contract tasks remain implemented rather than verified until their required schema, fixture, integration, and Bun checks are completed. Next work should follow the parallel workstreams: Repo Radar scan contracts, requirement decomposition, and the remaining Plan Forge safe-read/write work.
+The existing codebase already has a Plan agent, session TODO tool, worktree support, plugins/MCP, image generation, terminal, code review, and session/subagent infrastructure. These are reuse points, not tasks to rebuild. M0 source audit, overlap analysis, data/evidence contracts, and the first integration ADR are verified. RSF-301 and RSF-401 are verified, including the execution packet golden fixture. RSF-302 has a pure read-only parser and nine focused test cases; RSF-101 has a repository scan-policy helper, contract, and six focused test cases; RSF-102 has a pure manifest analyzer, contract, and seven focused test cases; RSF-103 has a path-only documentation inventory and hierarchical guidance resolver with four focused test cases; RSF-201 has a pure requirement validator and six focused test cases. RSF-601 now has a revision-bound Proof Gate evaluator and nine focused tests. RSF-701, RSF-801, and RSF-901 have separate review-only memory, project visual profile, and workspace identity contracts. These nine implementation/contract tasks remain implemented rather than verified until their required schema, fixture, integration, and Bun checks are completed. Next work should follow the parallel workstreams: Repo Radar scan contracts, requirement decomposition, and the remaining Plan Forge safe-read/write work.
