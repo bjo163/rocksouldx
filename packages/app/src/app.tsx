@@ -1,4 +1,6 @@
 import "@/index.css"
+import "@/rocksoul.css"
+import "@/rocksoul.css"
 import { VoiceProvider } from "@/voice/context"
 import { VoiceOverlay } from "@/voice/composer"
 import { DialogProvider } from "@opencode/ui/context/dialog"
@@ -51,15 +53,17 @@ function BodyTypography() {
 export function AppBaseProviders(
   props: ParentProps<{
     locale?: Locale
+    appName?: string
+    defaultTheme?: string
     onNativeTranslations?: Parameters<typeof LanguageProvider>[0]["onNativeTranslations"]
     onThemeApplied?: (mode: "light" | "dark", scheme: "system" | "light" | "dark") => void
   }>,
 ) {
   return (
     <MetaProvider>
-      <Title>Rocksoul</Title>
+      <Title>{props.appName ?? "Rocksoul"}</Title>
       <Font />
-      <ThemeProvider defaultTheme="rocksoul-industrial" onThemeApplied={(mode, scheme) => props.onThemeApplied?.(mode, scheme)}>
+      <ThemeProvider defaultTheme={props.defaultTheme ?? "rocksoul-industrial"} onThemeApplied={(mode, scheme) => props.onThemeApplied?.(mode, scheme)}>
         <LanguageProvider locale={props.locale} onNativeTranslations={props.onNativeTranslations}>
           <UiI18nBridge>
             <ErrorBoundary
