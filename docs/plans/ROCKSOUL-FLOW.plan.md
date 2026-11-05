@@ -251,8 +251,8 @@ This is the canonical task backlog, not a blanket claim that ROCKSOUL FLOW is im
 - Status: implemented
 - Depends on: RSF-301
 - Goal: parse plans and detect structural errors.
-- Scope: duplicate IDs, missing dependencies, dependency cycles, invalid statuses, missing or empty required fields, invalid dependency syntax, and source-located diagnostics.
-- Acceptance: parser returns actionable diagnostics with source locations; unknown metadata is preserved; invalid input cannot silently overwrite the file.
+- Scope: documented task headings, malformed task-like headings, required fields, field source lines, metadata preservation, duplicate IDs, invalid statuses, invalid dependency syntax, missing dependencies, and dependency cycles.
+- Acceptance: parser returns typed tasks and actionable source-located diagnostics; raw sections and unknown metadata are preserved; malformed task headings are not silently ignored; parser performs no filesystem or runtime side effects.
 - Verification: unit tests and malformed/large plan fixtures.
 - Deliverable: Read-only parser and focused tests: ../../packages/core/src/flow/plan.ts and ../../packages/core/test/flow/plan.test.ts
 
