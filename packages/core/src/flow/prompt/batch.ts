@@ -1,3 +1,4 @@
+import path from "path"
 import { compileExecutionPrompt } from "./compiler.js"
 import type {
   PromptCompilationResult,
@@ -29,6 +30,16 @@ export interface ParallelPromptBatchResult {
   readonly blockedTasks: readonly { taskID: string; reasons: readonly string[] }[]
   readonly collisions: readonly ParallelPromptCollision[]
   readonly diagnostics: readonly string[]
+}
+
+function canonicalWorktreePath(value: string): string | undefined {
+  if (path.win32.isAbsolute(value)) return path.win32.normalize(value).replaceAll("\\\\", "/").toLowerCase()
+  if (path.isAbsolute(value)) return path.resolve(value)
+  return undefined
+}
+
+function pathContains(parent: string, child: string): boolean {
+  return child === parent || child.startsWith(parent.endsWith("/") ? parent : parent + "/")
 }
 
 function scopeDirectory(pattern: string): string {
