@@ -28,6 +28,7 @@ const STORAGE_KEYS = {
   COLOR_SCHEME: "opencode-color-scheme",
   THEME_CSS_LIGHT: "opencode-theme-css-light",
   THEME_CSS_DARK: "opencode-theme-css-dark",
+  ROCKSOUL_THEME_MIGRATION: "opencode-rocksoul-theme-migrated",
 } as const
 
 const THEME_STYLE_ID = "oc-theme"
@@ -63,7 +64,8 @@ function knownThemes() {
 
 const names = new Map(
   Object.entries({
-    "oc-2": "Rocksoul Classic",
+    "oc-2": "OpenCode",
+    rocksoul: "Rocksoul Classic",
     "rocksoul-industrial": "Rocksoul Industrial",
     "rocksoul-punk": "Rocksoul Punk",
     "rocksoul-workbench": "Rocksoul Workbench",
@@ -209,8 +211,12 @@ export const { use: useTheme, provider: ThemeProvider } = createSimpleContext({
     /** The window shows the theme: its colors, or until a registered theme arrives, those cached from the last run. */
     onThemeApplied?: (mode: "light" | "dark", scheme: ColorScheme) => void
   }) => {
-    // An id no theme has yet stays selected until `settle`: a registered theme can arrive after startup.
-    const themeId = read(STORAGE_KEYS.THEME_ID) || props.defaultTheme || "rocksoul-industrial"
+    // Migrate the stock desktop default once, but do not override a later explicit choice of the stock theme.
+    const defaultTheme = props.defaultTheme ?? "rocksoul-industrial"
+    const storedThemeId = read(STORAGE_KEYS.THEME_ID)
+    const rocksoulMigrationDone = read(STORAGE_KEYS.ROCKSOUL_THEME_MIGRATION) === "true"
+    const migrateStockTheme = defaultTheme === "rocksoul-industrial" && storedThemeId === "oc-2" && !rocksoulMigrationDone
+    const themeId = migrateStockTheme ? defaultTheme : storedThemeId || defaultTheme
     const colorScheme = readScheme()
     const mode = colorScheme === "system" ? getSystemMode() : colorScheme
 
@@ -316,8 +322,16 @@ export const { use: useTheme, provider: ThemeProvider } = createSimpleContext({
 
       makeEventListener(mediaQuery, "change", onMedia)
 
-      const savedTheme = read(STORAGE_KEYS.THEME_ID) || props.defaultTheme || "rocksoul-industrial"
+      const storedThemeId = read(STORAGE_KEYS.THEME_ID)
+      const migrationDone = read(STORAGE_KEYS.ROCKSOUL_THEME_MIGRATION) === "true"
+      const migrateStockTheme = defaultTheme === "rocksoul-industrial" && storedThemeId === "oc-2" && !migrationDone
+      const savedTheme = migrateStockTheme ? defaultTheme : storedThemeId || defaultTheme
       const savedScheme = readScheme()
+
+      if (defaultTheme === "rocksoul-industrial" && !migrationDone) {
+        write(STORAGE_KEYS.ROCKSOUL_THEME_MIGRATION, "true")
+        if (migrateStockTheme) write(STORAGE_KEYS.THEME_ID, savedTheme)
+      }
 
       if (savedTheme !== store.themeId) setStore("themeId", savedTheme)
 
