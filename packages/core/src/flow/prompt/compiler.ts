@@ -1,5 +1,6 @@
 import { Hash } from "@opencode/util/hash"
 import path from "path"
+import { normalizeRemoteIdentity } from "../workspace/graph.js"
 import { parsePlanMarkdown, type PlanParseResult, type PlanTask } from "../plan.js"
 import { applicableGuidance } from "../repo/docs.js"
 import { normalizeScanPath } from "../repo/scan-policy.js"
@@ -63,7 +64,7 @@ const SECRET_PATTERNS = [
   /((?:^|\s)[A-Z0-9_]*(?:TOKEN|PASSWORD|PASSWD|SECRET|API_KEY|PRIVATE_KEY)[A-Z0-9_]*=)([^\s]+)/gi,
   /(--?(?:token|password|passwd|secret|api[-_]key|access[-_]key)(?:=|\s+))(?:\"[^\"]*\"|'[^']*'|[^\s]+)/gi,
   /(Bearer\s+)[A-Za-z0-9._~+/-]{8,}/gi,
-  /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----[\s\S]*?-----END (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/g,
+  /(-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----)[\s\S]*?(-----END (?:RSA |EC |OPENSSH )?PRIVATE KEY-----)/g,
 ]
 
 const inlineCode = (value: string) => String.fromCharCode(96) + value + String.fromCharCode(96)
@@ -97,8 +98,8 @@ function commandSection(commands: readonly PromptCommand[]): string[] {
   return commands.map((command) => {
     const decision = command.decision
     const marker = command.required ? "REQUIRED" : "OPTIONAL"
-    return "- [" + marker + "] " + quote(command.id) + " — " +
-      inlineCode(quote(decision.command)) + " from " + inlineCode(quote(decision.workingDirectory)) +
+    return "- [" + marker + "] " + safeText(command.id, 120) + " — " +
+      inlineCode(safeText(decision.command, 500)) + " from " + inlineCode(safeText(decision.workingDirectory, 300)) +
       " — " + decision.status + ": " + safeText(decision.reason, 300)
   })
 }
@@ -135,6 +136,10 @@ export function compileExecutionPrompt(input: {
     reasons.push("Repository HEAD must be a full 40- or 64-character Git revision")
   if (!input.repository.projectID.trim() || !input.repository.checkoutID.trim() || !input.repository.branch.trim())
     reasons.push("Project, checkout, and branch identities are required")
+  if (input.repository.remoteIdentity && !normalizeRemoteIdentity(input.repository.remoteIdentity))
+    reasons.push("Remote identity must be normalized and credential-free")
+  if ([input.packetID, input.repository.projectID, input.repository.checkoutID, input.repository.branch, input.execution.path].some((value) => /[\\u0000-\\u001f\\u007f]/.test(value)))
+    reasons.push("Packet, project, checkout, branch, and worktree fields cannot contain control characters")
   if (input.repository.dirtyState !== "clean" || input.repository.dirtyPaths.length > 0)
     reasons.push("Repository checkout must be clean before packet compilation")
   if (!absolutePath(input.execution.path) || !input.execution.baseRevision.trim())
@@ -183,31 +188,31 @@ export function compileExecutionPrompt(input: {
     }),
   ])
   const dependencies = selected.dependsOn.map((id) => taskByID(parsedPlan, id)).filter((item): item is PlanTask => !!item)
-  const sources = input.sources.toSorted((a, b) => a.path.localeCompare(b.path))
+  const sources = input.sources.map((item) => ({ ...item, path: normalizeScanPath(item.path)! })).toSorted((a, b) => a.path.localeCompare(b.path))
   const existing = uniqueSorted(input.existingImplementation.map((item) => safeText(item, 1000)))
   const packages = uniqueSorted(input.relevantPackages.map((item) => safeText(item, 300)))
   const commands = input.commands.toSorted((a, b) => a.id.localeCompare(b.id))
 
   const markdown = [
-    "# ROCKSOUL DX Execution Packet — " + selected.id,
+    "# ROCKSOUL DX Execution Packet — " + safeText(selected.id, 100),
     "",
     "## Immutable envelope",
     "",
-    "- Packet ID: " + quote(input.packetID),
+    "- Packet ID: " + safeText(input.packetID, 120),
     "- Packet format/compiler: 1 / " + COMPILER_VERSION,
-    "- Generated at: " + input.generatedAt,
+    "- Generated at: " + safeText(input.generatedAt, 80),
     "- Task: " + selected.id + " — " + safeText(selected.title, 300),
     "- Task status: " + selected.status,
     "- Plan: " + normalizedPlanPath,
     "- Plan SHA-256: " + planHash,
-    "- Project ID: " + quote(input.repository.projectID),
-    "- Checkout ID: " + quote(input.repository.checkoutID),
-    "- Remote: " + (input.repository.remoteIdentity ? quote(input.repository.remoteIdentity) : "unknown (not supplied)"),
-    "- Branch: " + quote(input.repository.branch),
+    "- Project ID: " + safeText(input.repository.projectID, 200),
+    "- Checkout ID: " + safeText(input.repository.checkoutID, 200),
+    "- Remote: " + (input.repository.remoteIdentity ? safeText(normalizeRemoteIdentity(input.repository.remoteIdentity) ?? "unknown", 500) : "unknown (not supplied)"),
+    "- Branch: " + safeText(input.repository.branch, 300),
     "- Starting revision: " + input.repository.revision,
     "- Dirty state: clean",
-    "- Worktree ID: " + (input.execution.worktreeID ? quote(input.execution.worktreeID) : "primary checkout (not recommended for parallel writes)"),
-    "- Worktree path: " + quote(input.execution.path),
+    "- Worktree ID: " + (input.execution.worktreeID ? safeText(input.execution.worktreeID, 200) : "primary checkout (not recommended for parallel writes)"),
+    "- Worktree path: " + safeText(input.execution.path, 1000),
     "- Worktree base revision: " + input.execution.baseRevision,
     "- Source snapshot: " + input.repository.revision,
     "",
@@ -232,7 +237,7 @@ export function compileExecutionPrompt(input: {
     "",
     "## Source references at the pinned revision",
     "",
-    ...(sources.length ? sources.map((item) => "- " + inlineCode(item.path) + " — " + safeText(item.purpose, 500) + " (revision " + item.revision + ")") : ["- No source references supplied."]),
+    ...(sources.length ? sources.map((item) => "- " + inlineCode(item.path) + " — " + safeText(item.purpose, 500) + " (revision " + safeText(item.revision, 80) + ")") : ["- No source references supplied."]),
     "",
     "## Dependencies",
     "",
