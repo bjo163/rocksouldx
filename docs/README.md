@@ -10,6 +10,12 @@ This directory contains product-specific documentation for ROCKSOUL DX. The prod
 | [ROCKSOUL FLOW product vision](product/ROCKSOUL-FLOW.md) | Product thesis, user journey, principles, and success signals. |
 | [ROCKSOUL FLOW feature blueprint](product/ROCKSOUL-FLOW-FEATURE-BLUEPRINT.md) | Capability definitions, user flows, conceptual entities, and feature acceptance boundaries. |
 | [ROCKSOUL FLOW architecture](architecture/ROCKSOUL-FLOW-ARCHITECTURE.md) | Integration strategy, reuse map, boundaries, data ownership, safety, and technical decision gates. |
+| [FLOW feature overlap matrix](architecture/ROCKSOUL-FLOW-OVERLAP-MATRIX.md) | Evidence-based decisions about what to reuse, extend, build, defer, or reject. |
+| [FLOW data and evidence contracts](architecture/ROCKSOUL-FLOW-DATA-CONTRACTS.md) | Revision identity, Markdown plans, task/run records, evidence, learning, visual profiles, and repository edges. |
+| [First integration ADR](architecture/ADR-0001-FLOW-FIRST-INTEGRATION-BOUNDARY.md) | Accepted boundary for the first pure Core parser slice. |
+| [Capability inventory](audits/ROCKSOUL-FLOW-CAPABILITY-INVENTORY.md) | Source-backed snapshot of existing capabilities and FLOW gaps. |
+| [Portable plan format](plans/ROCKSOUL-FLOW-PLAN-FORMAT.md) | Markdown v1 syntax, validation rules, and unknown-field preservation. |
+| [Parallel workstreams](plans/ROCKSOUL-FLOW-PARALLEL-WORKSTREAMS.md) | Agent lane ownership, dependency waves, integration rules, and safe concurrency. |
 | [ROCKSOUL FLOW plan](plans/ROCKSOUL-FLOW.plan.md) | Phased, dependency-aware implementation backlog with independently executable microtasks. |
 
 ## Source-of-truth rules
