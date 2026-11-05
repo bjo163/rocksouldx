@@ -77,7 +77,7 @@ export function normalizeRemoteIdentity(input: string): string | undefined {
 
   try {
     const url = new URL(value)
-    if (url.username || url.password || !["https:", "ssh:", "git:"].includes(url.protocol)) return undefined
+    if (url.password || !["https:", "ssh:", "git:"].includes(url.protocol)) return undefined
     const repository = url.pathname.replace(/^\/+|\/+$/g, "").replace(/\.git$/i, "")
     if (!repository || repository.split("/").some((part) => part === ".." || part === ".")) return undefined
     return url.host.toLowerCase() + "/" + repository.toLowerCase()
