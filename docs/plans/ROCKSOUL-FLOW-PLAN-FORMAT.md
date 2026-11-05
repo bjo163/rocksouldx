@@ -86,16 +86,20 @@ Example:
 
 The v1 parser returns:
 - task ID, title, parsed status, dependency IDs;
-- known field values;
+- known field values and field-to-source-line mapping;
 - unrecognized top-level field labels as metadata;
 - the exact raw Markdown section;
 - source start/end line numbers;
 - diagnostics with a stable code, message, and line.
 
 Required diagnostics:
+- malformed task heading that begins with a task-like ID but does not use the documented separator/title syntax;
+- empty task title;
 - duplicate task ID;
 - missing required field;
+- present-but-empty required content;
 - invalid status;
+- invalid dependency syntax or empty dependency declaration;
 - dependency ID not found;
 - dependency cycle;
 - empty task title or no task sections.
