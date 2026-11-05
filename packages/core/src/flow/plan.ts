@@ -152,7 +152,8 @@ function cycles(tasks: readonly PlanTask[]): Array<{ ids: string[]; line: number
         const start = stack.indexOf(dependency)
         const ids = [...stack.slice(start), dependency]
         const key = [...new Set(ids)].toSorted().join("|")
-        if (!found.has(key)) found.set(key, { ids, line: task?.line ?? 1 })
+        if (!found.has(key))
+          found.set(key, { ids, line: task?.fieldLines["Depends on"] ?? task?.line ?? 1 })
         continue
       }
 
@@ -192,12 +193,22 @@ export function parsePlanMarkdown(markdown: string): PlanParseResult {
   const parsed = sections.map((section): PlanTask => {
     const sectionLines = lines.slice(section.start, section.end)
     const { fields, fieldLines } = parseFields(sectionLines)
+    const sourceFieldLines = Object.fromEntries(
+      [...fieldLines].map(([name, line]) => [name, section.start + line]),
+    )
     const statusValue = fields.Status?.trim()
     const status = statusValue && STATUS.has(statusValue as PlanTaskStatus) ? (statusValue as PlanTaskStatus) : undefined
     const dependencyValue = fields["Depends on"]?.trim() ?? ""
     const dependsOn: string[] = []
 
-    if (!section.title) {
+    if (section.malformedHeading) {
+      diagnostics.push({
+        code: "malformed-task-heading",
+        message: `Task ${section.id} must use the "ID — title" heading format`,
+        line: section.start + 1,
+        taskID: section.id,
+      })
+    } else if (!section.title) {
       diagnostics.push({
         code: "empty-title",
         message: `Task ${section.id} has an empty title`,
@@ -221,7 +232,7 @@ export function parsePlanMarkdown(markdown: string): PlanParseResult {
         diagnostics.push({
           code: "empty-required-field",
           message: `Task ${section.id} has an empty required field: ${field}`,
-          line: section.start + (fieldLines.get(field) ?? 1),
+          line: sourceFieldLines[field] ?? section.start + 1,
           taskID: section.id,
         })
       }
@@ -231,7 +242,7 @@ export function parsePlanMarkdown(markdown: string): PlanParseResult {
       diagnostics.push({
         code: "invalid-status",
         message: `Task ${section.id} has an unsupported status: ${statusValue || "(empty)"}`,
-        line: section.start + (fieldLines.get("Status") ?? 1),
+        line: sourceFieldLines.Status ?? section.start + 1,
         taskID: section.id,
       })
     }
@@ -240,7 +251,7 @@ export function parsePlanMarkdown(markdown: string): PlanParseResult {
       diagnostics.push({
         code: "invalid-dependency",
         message: `Task ${section.id} must use "none" for an empty dependency list`,
-        line: section.start + (fieldLines.get("Depends on") ?? 1),
+        line: sourceFieldLines["Depends on"] ?? section.start + 1,
         taskID: section.id,
       })
     }
@@ -273,6 +284,7 @@ export function parsePlanMarkdown(markdown: string): PlanParseResult {
       ...(status ? { status } : {}),
       dependsOn,
       fields,
+      fieldLines: sourceFieldLines,
       metadata,
       raw: section.raw,
       line: section.start + 1,
@@ -302,7 +314,7 @@ export function parsePlanMarkdown(markdown: string): PlanParseResult {
       diagnostics.push({
         code: "missing-dependency",
         message: `Task ${task.id} depends on missing task ${dependency}`,
-        line: task.line,
+        line: task.fieldLines["Depends on"] ?? task.line,
         taskID: task.id,
         dependencyID: dependency,
       })
