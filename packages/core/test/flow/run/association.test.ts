@@ -102,6 +102,22 @@ describe("validateTaskRunAssociations", () => {
     expect(activePrevious.diagnostics.map((item) => item.code)).toContain("active-retry-predecessor")
   })
 
+  test("requires end timestamps for cancellation and preserves chronological lifecycle times", () => {
+    const cancelled = validateTaskRunAssociations({
+      runs: [run({ state: "cancelled" })],
+      existingSessionIDs: ["session-a"],
+      worktrees: [],
+    })
+    expect(cancelled.diagnostics.map((item) => item.code)).toContain("invalid-lifecycle-time")
+
+    const outOfOrder = validateTaskRunAssociations({
+      runs: [run({ createdAt: "2026-11-05T10:00:00.000Z", startedAt: "2026-11-05T09:59:00.000Z" })],
+      existingSessionIDs: ["session-a"],
+      worktrees: [],
+    })
+    expect(outOfOrder.diagnostics.map((item) => item.code)).toContain("invalid-lifecycle-time")
+  })
+
   test("rejects missing session/worktree references and invalid timestamps", () => {
     const result = validateTaskRunAssociations({
       runs: [run({
