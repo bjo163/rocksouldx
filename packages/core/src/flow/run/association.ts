@@ -141,7 +141,7 @@ export function validateTaskRunAssociations(input: {
       if (!worktree) {
         fail("missing-worktree", "Run references an unknown registered worktree: " + run.worktreeID, run.runID)
       } else {
-        if (!absolutePath(worktree.path) || worktree.branch !== run.branch || worktree.baseRevision !== run.revision)
+        if (!absolutePath(worktree.path) || absolutePath(worktree.path) === checkout || (checkout && containsPath(checkout, absolutePath(worktree.path) ?? "")) || worktree.branch !== run.branch || worktree.baseRevision !== run.revision)
           fail("worktree-identity-mismatch", "Run branch/revision must match its registered worktree identity", run.runID)
       }
     }
@@ -149,10 +149,12 @@ export function validateTaskRunAssociations(input: {
     if (!Number.isFinite(Date.parse(run.createdAt))) fail("invalid-timestamp", "Run creation time must be valid", run.runID)
     if (run.startedAt && !Number.isFinite(Date.parse(run.startedAt))) fail("invalid-timestamp", "Run start time must be valid", run.runID)
     if (run.endedAt && !Number.isFinite(Date.parse(run.endedAt))) fail("invalid-timestamp", "Run end time must be valid", run.runID)
+    if (run.startedAt && Date.parse(run.startedAt) < Date.parse(run.createdAt)) fail("invalid-lifecycle-time", "Run start time cannot precede creation", run.runID)
+    if (run.endedAt && Date.parse(run.endedAt) < Date.parse(run.startedAt ?? run.createdAt)) fail("invalid-lifecycle-time", "Run end time cannot precede its start/creation", run.runID)
     if (run.state === "queued" && run.startedAt) fail("invalid-lifecycle-time", "Queued runs cannot have a start time", run.runID)
     if ((run.state === "running" || run.state === "waiting") && !run.startedAt)
       fail("invalid-lifecycle-time", "Running/waiting runs require a start time", run.runID)
-    if (TERMINAL_STATES.has(run.state) && run.state !== "cancelled" && !run.endedAt)
+    if (TERMINAL_STATES.has(run.state) && !run.endedAt)
       fail("invalid-lifecycle-time", "Finished/failed runs require an end time", run.runID)
     if (run.endedAt && !TERMINAL_STATES.has(run.state))
       fail("invalid-lifecycle-time", "Only terminal runs may have an end time", run.runID)
