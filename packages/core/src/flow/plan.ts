@@ -11,6 +11,7 @@ export type PlanTaskStatus =
 export type PlanDiagnosticCode =
   | "no-tasks"
   | "empty-title"
+  | "malformed-task-heading"
   | "duplicate-task-id"
   | "missing-required-field"
   | "empty-required-field"
@@ -33,6 +34,7 @@ export interface PlanTask {
   readonly status?: PlanTaskStatus
   readonly dependsOn: readonly string[]
   readonly fields: Readonly<Record<string, string>>
+  readonly fieldLines: Readonly<Record<string, number>>
   readonly metadata: Readonly<Record<string, string>>
   readonly raw: string
   readonly line: number
@@ -58,6 +60,7 @@ const STATUS = new Set<PlanTaskStatus>([
 
 const REQUIRED_FIELDS = ["Status", "Depends on", "Goal", "Scope", "Acceptance", "Verification", "Deliverable"] as const
 const TASK_HEADING = /^##\s+([A-Z][A-Z0-9]*-\d{3,})(?:\s+[—–-]\s*(.*))?\s*$/
+const TASK_ID_PREFIX = /^##\s+([A-Z][A-Z0-9]*-\d{3,})(?=\s|$)/
 const SECTION_HEADING = /^#{1,2}\s+/
 const FIELD_LINE = /^-\s+([A-Za-z][A-Za-z0-9 _-]*):(?:\s*(.*))?$/
 const TASK_ID = /^[A-Z][A-Z0-9]*-\d{3,}$/
@@ -68,6 +71,7 @@ interface TaskSection {
   readonly start: number
   readonly end: number
   readonly raw: string
+  readonly malformedHeading: boolean
 }
 
 function lineText(line: string) {
@@ -111,17 +115,19 @@ function taskSections(lines: readonly string[]): TaskSection[] {
 
   for (let index = 0; index < lines.length; index++) {
     const heading = lineText(lines[index] ?? "")
+    const prefix = TASK_ID_PREFIX.exec(heading)
+    if (!prefix) continue
     const match = TASK_HEADING.exec(heading)
-    if (!match) continue
 
     const endIndex = lines.findIndex((line, offset) => offset > index && SECTION_HEADING.test(lineText(line)))
     const end = endIndex === -1 ? lines.length : endIndex
     sections.push({
-      id: match[1] ?? "",
-      title: (match[2] ?? "").trim(),
+      id: match?.[1] ?? prefix[1] ?? "",
+      title: (match?.[2] ?? "").trim(),
       start: index,
       end,
       raw: lines.slice(index, end).join("\n"),
+      malformedHeading: !match,
     })
   }
 
