@@ -119,7 +119,7 @@ export function parseRequirementUnits(input: unknown): RequirementParseResult {
         code: "missing-statement",
         message: "Requirement statement must preserve the explicit request behavior",
         index,
-        requirementID: id || undefined,
+        ...(id ? { requirementID: id } : {}),
       })
     }
 
