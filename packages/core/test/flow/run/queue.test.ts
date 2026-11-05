@@ -33,6 +33,7 @@ describe("buildDispatchQueue", () => {
       runs: [],
       maximumConcurrency: 2,
       parallelismAllowed: true,
+      parallelIsolationValid: true,
     })
 
     expect(result.dispatchCandidates).toEqual(["RSF-102"])
@@ -52,6 +53,7 @@ describe("buildDispatchQueue", () => {
       runs: [activeRun],
       maximumConcurrency: 2,
       parallelismAllowed: true,
+      parallelIsolationValid: true,
     })
     expect(parallel.dispatchCandidates).toEqual(["RSF-102"])
     expect(parallel.availableSlots).toBe(1)
@@ -61,6 +63,7 @@ describe("buildDispatchQueue", () => {
       runs: [activeRun],
       maximumConcurrency: 4,
       parallelismAllowed: false,
+      parallelIsolationValid: false,
     })
     expect(serial.dispatchCandidates).toEqual([])
     expect(serial.availableSlots).toBe(0)
