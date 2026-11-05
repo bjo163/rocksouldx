@@ -61,7 +61,7 @@ const SENSITIVE_FILENAMES = new Set([
  */
 export function normalizeScanPath(input: string): string | undefined {
   const value = input.replaceAll("\\", "/")
-  if (!value || value.startsWith("/") || /^[A-Za-z]:\//.test(value) || value.startsWith("//")) return undefined
+  if (!value || value.startsWith("/") || /^[A-Za-z]:/.test(value)) return undefined
 
   const parts: string[] = []
   for (const part of value.split("/")) {
