@@ -77,6 +77,31 @@ describe("analyzeManifestInventory", () => {
     expect(result.warnings.map((warning) => warning.code)).toEqual(["invalid-json", "missing-content"])
   })
 
+  test("detects an npm-managed Node package without inventing commands", () => {
+    const result = analyzeManifestInventory([
+      {
+        path: "package.json",
+        content: JSON.stringify({
+          name: "node-app",
+          engines: { node: ">=22" },
+          scripts: { test: "node --test" },
+        }),
+      },
+      { path: "package-lock.json", content: "{}" },
+    ])
+
+    expect(result.primaryPackageManager).toBe("npm")
+    expect(result.languages).toEqual(["JavaScript"])
+    expect(result.scripts).toEqual([
+      expect.objectContaining({
+        name: "test",
+        command: "node --test",
+        intent: "test",
+      }),
+    ])
+    expect(result.packages[0]?.engines).toEqual({ node: ">=22" })
+  })
+
   test("detects non-JavaScript language manifests", () => {
     const result = analyzeManifestInventory([
       { path: "Cargo.toml", content: "[package]" },
