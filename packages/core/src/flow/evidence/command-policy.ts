@@ -50,7 +50,7 @@ export function assessValidationCommand(input: {
 }): ValidationCommandPolicyDecision {
   const command = input.command.trim()
   const workingDirectory = normalizeDirectory(input.workingDirectory)
-  if (!workingDirectory) {
+  if (workingDirectory === undefined) {
     return {
       status: "invalid-working-directory",
       command,
