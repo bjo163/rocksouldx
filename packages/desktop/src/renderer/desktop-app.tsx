@@ -136,6 +136,8 @@ export function DesktopApp(props: { api: ElectronAPI; version: string }) {
   return (
     <PlatformProvider value={platform}>
       <AppBaseProviders
+        appName="ROCKSOUL DX"
+        defaultTheme="rocksoul"
         locale={selectStartupLocale(startup.state())}
         onNativeTranslations={(bundle) => void props.api.setNativeTranslations(bundle).catch(() => undefined)}
         onThemeApplied={(mode, scheme) => {

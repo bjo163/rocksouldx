@@ -1,5 +1,5 @@
+/* The first-launch mark uses the same short, poster-like stroke reveal as the former wordmark. */
 [data-component="first-launch-splash"] path {
-  /* Outline paths use a normalized length so the drawing scales with the wordmark. */
   stroke-dasharray: 1;
   animation: first-launch-wordmark-draw 1000ms ease-out both;
 }

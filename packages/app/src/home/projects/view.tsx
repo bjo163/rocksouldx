@@ -195,6 +195,23 @@ function HomeProjectsPanel(props: HomeProjectsViewProps) {
       }}
     >
       <Show when={!props.dropdown}>
+        <div data-slot="rocksoul-brand" class="flex min-w-0 shrink-0 items-center gap-3 px-1.5 py-2">
+          <svg viewBox="0 0 40 40" class="size-10 shrink-0" role="img" aria-label="ROCKSOUL DX">
+            <path d="M20 2.5 34 10.2V27.8L20 35.5 6 27.8V10.2L20 2.5Z" fill="#F15A24" />
+            <path d="M13 27V12h8.2c5.2 0 6.8 6.3 2.5 8.8L30 27M13 20.5h9.5" fill="none" stroke="#171512" strokeWidth="3.2" strokeLinecap="square" strokeLinejoin="miter" />
+            <path d="M29.5 7.8 32.5 9.5" fill="none" stroke="#C4DE65" strokeWidth="2.4" strokeLinecap="square" />
+          </svg>
+          <span class="flex min-w-0 flex-1 flex-col leading-none">
+            <span class="flex items-baseline gap-1.5">
+              <strong class="rocksoul-brand-word">ROCKSOUL</strong>
+              <strong class="rocksoul-brand-dx">DX</strong>
+            </span>
+            <span class="rocksoul-brand-caption mt-1.5">AGENT WORKBENCH / EST. 001</span>
+          </span>
+          <span class="rocksoul-brand-signal" aria-hidden="true" />
+        </div>
+      </Show>
+      <Show when={!props.dropdown}>
         <div class="flex h-7 min-w-0 shrink-0 items-center justify-between pl-1.5 pr-3">
           {/* Below lg, Projects heads the page on the collapsed sidebar toggle's line. Starting the space at the row's
               edge (the shell's 8px inset plus the grid's 12px padding) keeps the row's 6px padding after the toggle,

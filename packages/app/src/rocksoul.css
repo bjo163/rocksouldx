@@ -1,0 +1,161 @@
+/* ROCKSOUL DX — industrial manga / underground dev-zine visual layer.
+   Every selector is scoped to the ROCKSOUL theme so alternate user themes remain untouched. */
+
+:root[data-theme="rocksoul"] {
+  --rocksoul-ink: #171512;
+  --rocksoul-paper: #eee8dd;
+  --rocksoul-orange: #f15a24;
+  --rocksoul-lime: #c4de65;
+  --rocksoul-line: color-mix(in srgb, var(--v2-text-text-base) 13%, transparent);
+  --font-family-text: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-family-mono: "IBM Plex Mono", "JetBrainsMono Nerd Font Mono", monospace;
+}
+
+:root[data-theme="rocksoul"] body {
+  background: var(--v2-background-bg-deep);
+  color: var(--v2-text-text-base);
+  font-family: var(--font-family-text);
+}
+
+:root[data-theme="rocksoul"] ::selection {
+  color: #171512;
+  background: #c4de65;
+}
+
+:root[data-theme="rocksoul"] [data-slot="titlebar-v2"] {
+  position: relative;
+  isolation: isolate;
+  border-bottom: 1px solid var(--rocksoul-line);
+  background: var(--v2-background-bg-deep);
+}
+
+:root[data-theme="rocksoul"] [data-slot="titlebar-v2"]::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0 18px 0 auto;
+  width: 136px;
+  content: "";
+  pointer-events: none;
+  opacity: 0.14;
+  background: repeating-linear-gradient(
+    135deg,
+    transparent 0,
+    transparent 5px,
+    var(--v2-text-text-muted) 5px,
+    var(--v2-text-text-muted) 6px
+  );
+  mask-image: linear-gradient(to left, #000 8%, transparent 100%);
+}
+
+:root[data-theme="rocksoul"] [data-slot="vertical-tabs-mount"] {
+  border-inline-end: 1px solid var(--rocksoul-line);
+  background-image: linear-gradient(180deg, color-mix(in srgb, var(--v2-background-bg-base) 34%, transparent), transparent 42%);
+}
+
+:root[data-theme="rocksoul"] [data-slot="vertical-tabs-peek-surface"] {
+  border-inline-end: 1px solid var(--rocksoul-line);
+}
+
+:root[data-theme="rocksoul"] [data-slot="home-panel"] {
+  border: 1px solid var(--rocksoul-line);
+  border-radius: 6px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--rocksoul-orange) 4%, transparent), transparent 38%),
+    var(--v2-background-bg-base);
+}
+
+:root[data-theme="rocksoul"] [data-slot="rocksoul-brand"] {
+  min-height: 58px;
+  border-bottom: 1px solid var(--rocksoul-line);
+  background: repeating-linear-gradient(
+    135deg,
+    transparent 0,
+    transparent 7px,
+    color-mix(in srgb, var(--v2-text-text-base) 3%, transparent) 7px,
+    color-mix(in srgb, var(--v2-text-text-base) 3%, transparent) 8px
+  );
+}
+
+:root[data-theme="rocksoul"] .rocksoul-brand-word {
+  color: var(--v2-text-text-base);
+  font-family: var(--font-family-mono);
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: -0.09em;
+}
+
+:root[data-theme="rocksoul"] .rocksoul-brand-dx {
+  color: var(--rocksoul-orange);
+  font-family: var(--font-family-mono);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+:root[data-theme="rocksoul"] .rocksoul-brand-caption {
+  color: var(--v2-text-text-muted);
+  font-family: var(--font-family-mono);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
+:root[data-theme="rocksoul"] .rocksoul-brand-signal {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 1px;
+  background: var(--rocksoul-lime);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--rocksoul-lime) 44%, transparent);
+  transform: rotate(45deg);
+}
+
+:root[data-theme="rocksoul"] [data-slot="home-projects-scroll"] [data-home-row] {
+  border-inline-start: 2px solid transparent;
+  border-radius: 3px;
+  transition: background-color 140ms ease, border-color 140ms ease;
+}
+
+:root[data-theme="rocksoul"] [data-slot="home-projects-scroll"] [data-home-row][data-selected] {
+  border-inline-start-color: var(--rocksoul-orange);
+  background: color-mix(in srgb, var(--rocksoul-orange) 11%, var(--v2-background-bg-base));
+}
+
+:root[data-theme="rocksoul"] [data-slot="session-chat-panel"] {
+  border: 1px solid var(--rocksoul-line);
+  border-radius: 6px;
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--rocksoul-orange) 3%, transparent), transparent 28%),
+    var(--v2-background-bg-base);
+}
+
+:root[data-theme="rocksoul"] [data-slot="session-review-content"] {
+  border-inline-start: 1px solid var(--rocksoul-line);
+}
+
+:root[data-theme="rocksoul"] [data-slot="session-composer"] {
+  border-color: var(--rocksoul-line);
+}
+
+:root[data-theme="rocksoul"] [data-slot="session-turn-diffs-header"] {
+  font-family: var(--font-family-mono);
+  letter-spacing: 0.045em;
+}
+
+:root[data-theme="rocksoul"] [data-component="menu-v2-content"],
+:root[data-theme="rocksoul"] [data-component="dialog-v2-content"],
+:root[data-theme="rocksoul"] [data-component="popover-v2-content"] {
+  border: 1px solid var(--rocksoul-line);
+  border-radius: 6px;
+}
+
+:root[data-theme="rocksoul"] :focus-visible {
+  outline-color: var(--rocksoul-orange);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-theme="rocksoul"] [data-slot="home-projects-scroll"] [data-home-row] {
+    transition: none;
+  }
+}
