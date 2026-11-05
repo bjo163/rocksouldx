@@ -466,13 +466,13 @@ This is the canonical task backlog, not a blanket claim that ROCKSOUL FLOW is im
 
 ## RSF-701 — Define learning record and provenance
 
-- Status: planned
+- Status: implemented
 - Depends on: RSF-003
 - Goal: classify durable discoveries before storing them.
 - Scope: verified fact, decision, hypothesis, preference; source, date, repository/revision, destination, review state.
 - Acceptance: secrets and sensitive personal information are excluded; every record has provenance; duplicates are detectable.
 - Verification: schema and redaction tests.
-- Deliverable: learning record contract.
+- Deliverable: review-only learning contract: ../architecture/ROCKSOUL-FLOW-MEMORY-LEDGER-CONTRACT.md
 
 ## RSF-702 — Extract candidate learnings from sessions
 
@@ -508,13 +508,13 @@ This is the canonical task backlog, not a blanket claim that ROCKSOUL FLOW is im
 
 ## RSF-801 — Define a project visual profile contract
 
-- Status: planned
+- Status: implemented
 - Depends on: RSF-003
 - Goal: represent a project's design DNA without coupling it to ROCKSOUL's own theme.
 - Scope: references, tokens, typography, composition rules, component contracts, motion, accessibility, and provenance.
 - Acceptance: multiple project profiles can coexist; design reference assets are traceable; user-authored constraints are preserved.
 - Verification: sample profiles including the ROCKSOUL desktop contract and a contrasting external project.
-- Deliverable: visual profile specification.
+- Deliverable: project-scoped visual profile contract with contrasting examples: ../architecture/ROCKSOUL-FLOW-VISUAL-PROFILE-CONTRACT.md
 
 ## RSF-802 — Build reference and design contract registry
 
@@ -550,13 +550,13 @@ This is the canonical task backlog, not a blanket claim that ROCKSOUL FLOW is im
 
 ## RSF-901 — Define repository registration and identity
 
-- Status: planned
+- Status: implemented
 - Depends on: RSF-004
 - Goal: register several independent repositories safely.
 - Scope: stable repository identity, local path, remote URL, selected revision, trust/permission scope, and display metadata.
 - Acceptance: remote URL is not treated as proof of local checkout identity; each repository has independent configuration and Git state.
 - Verification: same-remote multiple-checkout and renamed-directory fixtures.
-- Deliverable: workspace registry contract.
+- Deliverable: explicit repository graph and identity contract: ../architecture/ROCKSOUL-FLOW-WORKSPACE-ORBIT-CONTRACT.md
 
 ## RSF-902 — Model explicit cross-repository dependencies
 
@@ -607,4 +607,4 @@ A task can be marked verified only when all applicable items below are satisfied
 
 ## Current implementation note
 
-The existing codebase already has a Plan agent, session TODO tool, worktree support, plugins/MCP, image generation, terminal, code review, and session/subagent infrastructure. These are reuse points, not tasks to rebuild. M0 source audit, overlap analysis, data/evidence contracts, and the first integration ADR are verified. RSF-301 and RSF-401 are verified, including the execution packet golden fixture. RSF-302 has a pure read-only parser and nine focused test cases; RSF-101 has a repository scan-policy helper, contract, and six focused test cases; RSF-102 has a pure manifest analyzer, contract, and seven focused test cases; RSF-103 has a path-only documentation inventory and hierarchical guidance resolver with four focused test cases; RSF-201 has a pure requirement validator and six focused test cases. All five remain implemented rather than verified until Bun executes the tests and integration behavior is reviewed. Next work should follow the parallel workstreams: Repo Radar scan contracts, requirement decomposition, and the remaining Plan Forge safe-read/write work.
+The existing codebase already has a Plan agent, session TODO tool, worktree support, plugins/MCP, image generation, terminal, code review, and session/subagent infrastructure. These are reuse points, not tasks to rebuild. M0 source audit, overlap analysis, data/evidence contracts, and the first integration ADR are verified. RSF-301 and RSF-401 are verified, including the execution packet golden fixture. RSF-302 has a pure read-only parser and nine focused test cases; RSF-101 has a repository scan-policy helper, contract, and six focused test cases; RSF-102 has a pure manifest analyzer, contract, and seven focused test cases; RSF-103 has a path-only documentation inventory and hierarchical guidance resolver with four focused test cases; RSF-201 has a pure requirement validator and six focused test cases. RSF-701, RSF-801, and RSF-901 now have separate review-only memory, project visual profile, and workspace identity contracts. These eight implementation/contract tasks remain implemented rather than verified until their required schema, fixture, integration, and Bun checks are completed. Next work should follow the parallel workstreams: Repo Radar scan contracts, requirement decomposition, and the remaining Plan Forge safe-read/write work.
