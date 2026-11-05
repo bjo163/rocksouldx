@@ -1,7 +1,7 @@
 import type { PlanTask } from "../plan.js"
 import { classifyScanPath, normalizeScanPath } from "../repo/scan-policy.js"
 
-export type GitChangedPathStatus = "added" | "modified" | "deleted" | "renamed" | "copied" | "type-changed" | "unmerged" | "unknown"
+export type GitChangedPathStatus = "added" | "modified" | "deleted" | "renamed" | "copied" | "type-changed" | "unmerged" | "untracked" | "unknown"
 
 export interface GitChangedPath {
   readonly path: string
@@ -212,7 +212,7 @@ export function reviewTaskDiffScope(input: {
       continue
     }
 
-    if (change.status === "added" && normalized.startsWith(".")) {
+    if (change.status === "untracked" || (change.status === "added" && normalized.startsWith("."))) {
       reviews.push({ path: normalized, status: "untracked-review", reason: "Hidden-file additions require explicit scope inspection" })
       continue
     }
