@@ -1,6 +1,5 @@
 import "@/index.css"
 import "@/rocksoul.css"
-import "@/rocksoul.css"
 import { VoiceProvider } from "@/voice/context"
 import { VoiceOverlay } from "@/voice/composer"
 import { DialogProvider } from "@opencode/ui/context/dialog"
