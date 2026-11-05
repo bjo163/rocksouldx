@@ -194,8 +194,8 @@ export function reviewTaskDiffScope(input: {
       continue
     }
 
-    if (change.status === "renamed" && change.previousPath) {
-      const previous = normalizeScanPath(change.previousPath)
+    if (change.status === "renamed") {
+      const previous = change.previousPath ? normalizeScanPath(change.previousPath) : undefined
       if (!previous || !pathAllowed(previous, declaredScope)) {
         reviews.push({ path: normalized, status: "out-of-scope", reason: "Rename source path is outside the declared task scope" })
         continue
