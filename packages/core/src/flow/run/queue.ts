@@ -32,6 +32,8 @@ export function buildDispatchQueue(input: {
   runs: readonly DispatchQueueRun[]
   maximumConcurrency: number
   parallelismAllowed: boolean
+  /** True only after every active/proposed write run has passed worktree isolation policy. */
+  parallelIsolationValid: boolean
   maximumCandidates?: number
 }): DispatchQueueResult {
   const diagnostics: string[] = []
@@ -70,7 +72,8 @@ export function buildDispatchQueue(input: {
 
   const maxCandidates = Math.max(0, Math.min(100, Math.floor(input.maximumCandidates ?? input.maximumConcurrency)))
   const configuredCapacity = diagnostics.length ? 0 : Math.max(0, input.maximumConcurrency - activeRuns.length)
-  const availableSlots = input.parallelismAllowed ? configuredCapacity : Math.min(configuredCapacity, activeRuns.length === 0 ? 1 : 0)
+  const parallelSafe = input.parallelismAllowed && input.parallelIsolationValid
+  const availableSlots = parallelSafe ? configuredCapacity : Math.min(configuredCapacity, activeRuns.length === 0 ? 1 : 0)
   const dispatchCandidates = eligible
     .toSorted((a, b) => a.line - b.line || a.id.localeCompare(b.id))
     .slice(0, Math.min(availableSlots, maxCandidates))
