@@ -1,17 +1,25 @@
 # ROCKSOUL FLOW — Implementation Plan
 
-Status: **PLANNED**  
+Status: **ACTIVE — INITIAL FOUNDATION DELIVERED**  
 Plan type: Product implementation roadmap  
 Canonical companion documents:
 - ../product/ROCKSOUL-FLOW.md
 - ../product/ROCKSOUL-FLOW-FEATURE-BLUEPRINT.md
 - ../architecture/ROCKSOUL-FLOW-ARCHITECTURE.md
+- ../architecture/ROCKSOUL-FLOW-OVERLAP-MATRIX.md
+- ../architecture/ROCKSOUL-FLOW-DATA-CONTRACTS.md
+- ../architecture/ADR-0001-FLOW-FIRST-INTEGRATION-BOUNDARY.md
+- ../audits/ROCKSOUL-FLOW-CAPABILITY-INVENTORY.md
+- ROCKSOUL-FLOW-PLAN-FORMAT.md
+- ROCKSOUL-FLOW-PARALLEL-WORKSTREAMS.md
 
-This plan is a task backlog, not a claim that the features are implemented. Initial documentation and branding artifacts are delivered separately; the workflow implementation tasks below remain planned until code and verification evidence are recorded.
+This is the canonical task backlog, not a blanket claim that ROCKSOUL FLOW is implemented. The source inventory, overlap matrix, data/evidence contracts, first integration ADR, and portable plan-format specification have been delivered and recorded as verified. The read-only plan parser and focused tests are implemented but not yet verified by an executed test run. All other workflow work remains planned until its code and evidence are recorded.
 
 ## Execution contract
 
-- Execute one task ID at a time unless a task explicitly defines safe parallel work.
+- Execute one task ID at a time unless the parallel-workstreams document defines safe parallel work.
+- Parallelize only after shared contracts are stable, with disjoint file ownership and one writer per mutable checkout; use separate worktrees for concurrent code writers.
+- The coordinator alone edits this canonical plan and applies status transitions after reviewing lane evidence.
 - Before implementation, reread the task, architecture document, relevant AGENTS.md files, and current source paths. The source may have changed since this plan was authored.
 - Audit the existing code and tests before creating a new module, package, schema, command, or UI surface.
 - Reuse existing sessions, agents, tools, plugins, MCP, permissions, worktrees, terminal, Git, and review features whenever they satisfy the requirement.
@@ -26,7 +34,8 @@ This plan is a task backlog, not a claim that the features are implemented. Init
 
 ## Status vocabulary
 
-- planned — defined but not ready for execution.
+- draft — incomplete or unreviewed authoring state; not executable.
+- planned — captured in the backlog but not yet ready for execution.
 - ready — dependencies and acceptance criteria are satisfied.
 - in_progress — an agent is actively working on it.
 - blocked — dependency, decision, or external condition prevents progress.
@@ -55,7 +64,7 @@ This plan is a task backlog, not a claim that the features are implemented. Init
 
 ## RSF-001 — Refresh the existing capability inventory
 
-- Status: planned
+- Status: verified
 - Depends on: none
 - Goal: establish a source-backed inventory before designing FLOW-specific modules.
 - Scope:
@@ -67,11 +76,11 @@ This plan is a task backlog, not a claim that the features are implemented. Init
   - Inherited, ROCKSOUL-specific, experimental, and unknown behavior are separated.
   - Findings identify stale or missing documentation.
 - Verification: compare the inventory with the current tree and inspect each cited source path.
-- Deliverable: source inventory table and list of unresolved architecture questions.
+- Deliverable: Source-backed inventory: ../audits/ROCKSOUL-FLOW-CAPABILITY-INVENTORY.md
 
 ## RSF-002 — Establish the feature overlap matrix
 
-- Status: planned
+- Status: verified
 - Depends on: RSF-001
 - Goal: prevent duplicate workflow systems.
 - Scope:
@@ -83,11 +92,11 @@ This plan is a task backlog, not a claim that the features are implemented. Init
   - No new subsystem is approved solely because its UI concept is new.
   - Uncertain ownership is listed as a decision gate.
 - Verification: review every matrix row against source and tests.
-- Deliverable: feature overlap matrix under docs/architecture or docs/audits.
+- Deliverable: Evidence-backed reuse/build/defer matrix: ../architecture/ROCKSOUL-FLOW-OVERLAP-MATRIX.md
 
 ## RSF-003 — Define task and evidence contracts
 
-- Status: planned
+- Status: verified
 - Depends on: RSF-001, RSF-002
 - Goal: define portable concepts before persistence or UI implementation.
 - Scope:
@@ -100,11 +109,11 @@ This plan is a task backlog, not a claim that the features are implemented. Init
   - Check results distinguish pass, fail, skipped, not applicable, and not run.
   - Unknown user-authored metadata can be preserved.
 - Verification: schema review with example valid and invalid documents.
-- Deliverable: concise data contract with sample fixtures.
+- Deliverable: Task and evidence contracts: ../architecture/ROCKSOUL-FLOW-DATA-CONTRACTS.md
 
 ## RSF-004 — Decide the first integration boundary
 
-- Status: planned
+- Status: verified
 - Depends on: RSF-001, RSF-002, RSF-003
 - Goal: choose the smallest safe place to implement the first FLOW vertical slice.
 - Scope:
@@ -116,7 +125,7 @@ This plan is a task backlog, not a claim that the features are implemented. Init
   - The vertical slice has a bounded file and runtime surface.
   - The decision is compatible with upstream synchronization.
 - Verification: architecture review and dependency-direction check against root AGENTS.md.
-- Deliverable: accepted architecture decision record.
+- Deliverable: Accepted integration decision: ../architecture/ADR-0001-FLOW-FIRST-INTEGRATION-BOUNDARY.md
 
 # M1 — Repo Radar
 
@@ -175,7 +184,7 @@ This plan is a task backlog, not a claim that the features are implemented. Init
 ## RSF-201 — Define requirement decomposition
 
 - Status: planned
-- Depends on: RSF-105
+- Depends on: RSF-003
 - Goal: convert a feature request into reviewable requirement units.
 - Scope: requirement IDs, expected behavior, explicit constraints, non-goals, and unresolved questions.
 - Acceptance: vague requirements remain unresolved rather than being silently guessed; original user intent remains traceable.
@@ -185,7 +194,7 @@ This plan is a task backlog, not a claim that the features are implemented. Init
 ## RSF-202 — Build evidence retrieval for requirements
 
 - Status: planned
-- Depends on: RSF-201
+- Depends on: RSF-201, RSF-104
 - Goal: find code, tests, docs, config, and existing plans relevant to each requirement.
 - Scope: reuse current file search, symbol/code navigation, and repository inventory; add ranking only where a measurable gap exists.
 - Acceptance: every finding has one or more inspectable references; inaccessible scope is disclosed; no semantic score is treated as proof.
@@ -226,23 +235,23 @@ This plan is a task backlog, not a claim that the features are implemented. Init
 
 ## RSF-301 — Specify the portable Markdown plan format
 
-- Status: planned
-- Depends on: RSF-003, RSF-205
+- Status: verified
+- Depends on: RSF-003
 - Goal: define a stable plan format readable outside ROCKSOUL DX.
 - Scope: frontmatter/metadata decision, milestone and task syntax, status vocabulary, dependency references, evidence links, and unknown-field preservation.
 - Acceptance: format is documented with valid/invalid examples; plain text remains readable; IDs remain stable across edits.
 - Verification: fixture validation and round-trip preservation tests.
-- Deliverable: plan format specification.
+- Deliverable: Portable Markdown v1: ROCKSOUL-FLOW-PLAN-FORMAT.md
 
 ## RSF-302 — Implement plan parser and validator
 
-- Status: planned
+- Status: implemented
 - Depends on: RSF-301
 - Goal: parse plans and detect structural errors.
-- Scope: duplicate IDs, missing dependencies, dependency cycles, invalid statuses, orphan tasks, and malformed acceptance criteria.
+- Scope: duplicate IDs, missing dependencies, dependency cycles, invalid statuses, missing or empty required fields, invalid dependency syntax, and source-located diagnostics.
 - Acceptance: parser returns actionable diagnostics with source locations; unknown metadata is preserved; invalid input cannot silently overwrite the file.
 - Verification: unit tests and malformed/large plan fixtures.
-- Deliverable: parser, validator, and diagnostics.
+- Deliverable: Read-only parser and focused tests: ../../packages/core/src/flow/plan.ts and ../../packages/core/test/flow/plan.test.ts
 
 ## RSF-303 — Add safe plan read/write operations
 
@@ -257,7 +266,7 @@ This plan is a task backlog, not a claim that the features are implemented. Init
 ## RSF-304 — Generate plans from reviewed audit findings
 
 - Status: planned
-- Depends on: RSF-205, RSF-302
+- Depends on: RSF-203, RSF-302
 - Goal: draft a plan with traceable requirements and small tasks.
 - Scope: milestone grouping, microtask decomposition, dependencies, scope, acceptance criteria, verification, and deliverables.
 - Acceptance: implemented/partial findings are reused as context, not replanned blindly; every task maps to a requirement or explicit foundation task; plan is draft until approved.
@@ -351,7 +360,7 @@ This plan is a task backlog, not a claim that the features are implemented. Init
 ## RSF-503 — Add safe worktree isolation
 
 - Status: planned
-- Depends on: RSF-502
+- Depends on: RSF-501
 - Goal: prevent parallel agents from colliding in a mutable checkout.
 - Scope: worktree selection/creation, branch naming policy, dirty-worktree detection, base revision, ownership, and cleanup review.
 - Acceptance: never discard user changes; task ownership is visible; cleanup requires a safe empty/known state and applicable user approval.
@@ -595,4 +604,4 @@ A task can be marked verified only when all applicable items below are satisfied
 
 ## Current implementation note
 
-The existing codebase already has a Plan agent, session TODO tool, worktree support, plugins/MCP, image generation, terminal, code review, and session/subagent infrastructure. These are reuse points, not tasks to rebuild. The next implementation action should begin with RSF-001 and RSF-002 against the then-current branch, followed by the architecture decision in RSF-004.
+The existing codebase already has a Plan agent, session TODO tool, worktree support, plugins/MCP, image generation, terminal, code review, and session/subagent infrastructure. These are reuse points, not tasks to rebuild. M0 source audit, overlap analysis, data/evidence contracts, and the first integration ADR are verified. RSF-301 is verified. RSF-302 has a pure read-only parser and seven focused test cases committed, but remains implemented rather than verified until Bun executes those tests. Next work should follow the parallel workstreams: Repo Radar scan contracts, requirement decomposition, and the remaining Plan Forge safe-read/write work.
