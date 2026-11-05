@@ -17,6 +17,7 @@ This directory contains product-specific documentation for ROCKSOUL DX. The prod
 | [Portable plan format](plans/ROCKSOUL-FLOW-PLAN-FORMAT.md) | Markdown v1 syntax, validation rules, and unknown-field preservation. |
 | [Parallel workstreams](plans/ROCKSOUL-FLOW-PARALLEL-WORKSTREAMS.md) | Agent lane ownership, dependency waves, integration rules, and safe concurrency. |
 | [Execution packet contract](plans/ROCKSOUL-FLOW-EXECUTION-PACKET.md) | Deterministic one-task instructions and guardrails for local coding agents. |
+| [Repository scan policy](plans/ROCKSOUL-FLOW-REPO-SCAN-POLICY.md) | Root confinement, ignore precedence, generated/sensitive paths, symlinks, and incomplete scan handling. |
 | [ROCKSOUL FLOW plan](plans/ROCKSOUL-FLOW.plan.md) | Phased, dependency-aware implementation backlog with independently executable microtasks. |
 
 ## Source-of-truth rules
