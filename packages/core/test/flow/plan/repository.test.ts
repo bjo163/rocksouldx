@@ -38,6 +38,7 @@ function storeFixture(initial = markdown) {
   let snapshot: PlanDocumentSnapshot = {
     path: "docs/plans/ROCKSOUL-FLOW.plan.md",
     revision: "revision-a",
+    repositoryRevision: "git-revision-a",
     content: initial,
   }
   let writes = 0
@@ -171,7 +172,7 @@ describe("createPlanRepository", () => {
       ...request,
       proof: {
         taskID: "RSF-101",
-        repositoryRevision: "revision-a",
+        repositoryRevision: "git-revision-a",
         ready: true,
         evidenceIDs: ["proof-1"],
         reviewerState: "accepted",
