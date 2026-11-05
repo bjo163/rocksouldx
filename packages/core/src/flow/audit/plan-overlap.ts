@@ -122,7 +122,8 @@ export function analyzePlanTaskOverlap(input: {
   revision: string
   minimumSimilarity?: number
 }): PlanOverlapResult {
-  const minimumSimilarity = Math.max(0.5, Math.min(1, input.minimumSimilarity ?? 0.18))
+  const requestedSimilarity = input.minimumSimilarity ?? 0.18
+  const minimumSimilarity = Number.isFinite(requestedSimilarity) ? Math.max(0.05, Math.min(1, requestedSimilarity)) : 0.18
   const tasks = input.tasks.toSorted((a, b) => a.id.localeCompare(b.id))
   const findings: PlanTaskOverlapFinding[] = []
 
