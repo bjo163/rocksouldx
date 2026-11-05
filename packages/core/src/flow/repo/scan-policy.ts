@@ -5,6 +5,8 @@ export type ScanPathExclusion =
   | "generated-or-vendor"
   | "sensitive-path"
   | "symlink-not-followed"
+  | "vcs-ignored"
+  | "inaccessible"
 
 export type ScanPathDecision =
   | { readonly included: true; readonly path: string }
@@ -94,11 +96,17 @@ function sensitivePath(relative: string): boolean {
  * VCS ignore rules are intentionally not reimplemented here. Callers must pass the
  * repository's ignore-aware path discovery result from the existing filesystem/Git layer.
  */
-export function classifyScanPath(input: { path: string; symlink?: boolean }): ScanPathDecision {
-  if (input.symlink) return { included: false, reason: "symlink-not-followed" }
-
+export function classifyScanPath(input: {
+  path: string
+  symlink?: boolean
+  ignored?: boolean
+  accessible?: boolean
+}): ScanPathDecision {
   const relative = normalizeScanPath(input.path)
   if (!relative) return { included: false, reason: "invalid-relative-path" }
+  if (input.symlink) return { included: false, path: relative, reason: "symlink-not-followed" }
+  if (input.accessible === false) return { included: false, path: relative, reason: "inaccessible" }
+  if (input.ignored) return { included: false, path: relative, reason: "vcs-ignored" }
 
   const parts = relative.split("/")
   if (parts.some((part) => EXCLUDED_DIRECTORY_SET.has(part.toLowerCase())))
