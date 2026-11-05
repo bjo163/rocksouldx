@@ -263,7 +263,7 @@ export function parsePlanMarkdown(markdown: string): PlanParseResult {
           diagnostics.push({
             code: "invalid-dependency",
             message: `Task ${section.id} has an invalid dependency ID: ${dependency || "(empty)"}`,
-            line: section.start + (fieldLines.get("Depends on") ?? 1),
+            line: sourceFieldLines["Depends on"] ?? section.start + 1,
             taskID: section.id,
             dependencyID: dependency,
           })
