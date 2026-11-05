@@ -64,7 +64,6 @@ export function compileParallelExecutionBatch(input: {
   generatedAt: string
   planPath: string
   planMarkdown: string
-  plan: PlanParseResult
   repositoryRevision: string
   requests: readonly ParallelPromptRequest[]
   maximumConcurrency: number
@@ -100,9 +99,11 @@ export function compileParallelExecutionBatch(input: {
     if (request.execution.worktreeID && seenWorktrees.has(request.execution.worktreeID))
       reasons.push("Two packet requests share the same worktree ID")
     if (request.execution.worktreeID) seenWorktrees.add(request.execution.worktreeID)
-    const path = request.execution.path.replaceAll("\\", "/").replace(/\/+$/, "").toLowerCase()
-    if (seenPaths.has(path)) reasons.push("Two packet requests share the same physical worktree path")
-    if (path) seenPaths.add(path)
+    const worktreePath = canonicalWorktreePath(request.execution.path)
+    if (!worktreePath) reasons.push("Worktree path must be absolute and canonicalizable")
+    if (worktreePath && [...seenPaths].some((existing) => pathContains(existing, worktreePath) || pathContains(worktreePath, existing)))
+      reasons.push("Two packet requests share or nest physical worktree paths")
+    if (worktreePath) seenPaths.add(worktreePath)
 
     if (reasons.length) blockedTasks.push({ taskID: request.taskID, reasons })
     else candidates.push({ request })
@@ -117,7 +118,7 @@ export function compileParallelExecutionBatch(input: {
     for (let rightIndex = leftIndex + 1; rightIndex < candidates.length; rightIndex++) {
       const right = candidates[rightIndex]
       if (!right) continue
-      const rightTask = input.plan.tasks.find((task) => task.id === right.request.taskID)
+      const rightTask = parsedPlan.tasks.find((task) => task.id === right.request.taskID)
       if (!rightTask) continue
       const leftScopes = leftTask.fields.Scope ?? ""
       const rightScopes = rightTask.fields.Scope ?? ""
