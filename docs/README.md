@@ -16,6 +16,7 @@ This directory contains product-specific documentation for ROCKSOUL DX. The prod
 | [Capability inventory](audits/ROCKSOUL-FLOW-CAPABILITY-INVENTORY.md) | Source-backed snapshot of existing capabilities and FLOW gaps. |
 | [Portable plan format](plans/ROCKSOUL-FLOW-PLAN-FORMAT.md) | Markdown v1 syntax, validation rules, and unknown-field preservation. |
 | [Parallel workstreams](plans/ROCKSOUL-FLOW-PARALLEL-WORKSTREAMS.md) | Agent lane ownership, dependency waves, integration rules, and safe concurrency. |
+| [Execution packet contract](plans/ROCKSOUL-FLOW-EXECUTION-PACKET.md) | Deterministic one-task instructions and guardrails for local coding agents. |
 | [ROCKSOUL FLOW plan](plans/ROCKSOUL-FLOW.plan.md) | Phased, dependency-aware implementation backlog with independently executable microtasks. |
 
 ## Source-of-truth rules
