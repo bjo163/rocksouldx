@@ -7,6 +7,7 @@ const scripts: PackageScript[] = [
   { packagePath: "packages/core", name: "typecheck", command: "bun run typecheck", intent: "typecheck" },
   { packagePath: "packages/core", name: "publish", command: "npm publish", intent: "other" },
   { packagePath: "packages/core", name: "docs", command: "bun run docs:sync", intent: "other" },
+  { packagePath: "", name: "lint", command: "bun run lint", intent: "lint" },
 ]
 
 describe("assessValidationCommand", () => {
@@ -16,6 +17,14 @@ describe("assessValidationCommand", () => {
       workingDirectory: "packages/core",
       scripts,
     })).toMatchObject({ status: "allowed", scriptName: "test" })
+  })
+
+  test("supports scripts declared at the repository root", () => {
+    expect(assessValidationCommand({
+      command: "bun run lint",
+      workingDirectory: ".",
+      scripts,
+    })).toMatchObject({ status: "allowed", scriptName: "lint", workingDirectory: "" })
   })
 
   test("does not authorize an arbitrary command that resembles a test", () => {
