@@ -1,0 +1,29 @@
+# ROCKSOUL DX documentation
+
+This directory contains product-specific documentation for ROCKSOUL DX. The product documents define intended behavior; repository source, package documentation, tests, and runtime configuration remain the authority for what is actually implemented today.
+
+## Start here
+
+| Document | Purpose |
+| --- | --- |
+| [ROCKSOUL DX branding](branding/ROCKSOUL-DX.md) | Desktop identity, visual direction, theme behavior, and design guardrails. |
+| [ROCKSOUL FLOW product vision](product/ROCKSOUL-FLOW.md) | Product thesis, user journey, principles, and success signals. |
+| [ROCKSOUL FLOW feature blueprint](product/ROCKSOUL-FLOW-FEATURE-BLUEPRINT.md) | Capability definitions, user flows, conceptual entities, and feature acceptance boundaries. |
+| [ROCKSOUL FLOW architecture](architecture/ROCKSOUL-FLOW-ARCHITECTURE.md) | Integration strategy, reuse map, boundaries, data ownership, safety, and technical decision gates. |
+| [ROCKSOUL FLOW plan](plans/ROCKSOUL-FLOW.plan.md) | Phased, dependency-aware implementation backlog with independently executable microtasks. |
+
+## Source-of-truth rules
+
+1. **Implementation truth:** current source code, runtime configuration, tests, and package documentation.
+2. **Product intent:** product vision and feature blueprint.
+3. **Technical direction:** architecture document, subject to source-level discovery before implementation.
+4. **Execution status:** the plan, but only when its status is backed by a commit, test, or other recorded evidence.
+5. **Visual identity:** the branding contract and the active theme implementation.
+
+A planned feature is not an implemented feature. A document does not override a runtime contract or upstream package behavior. When code and docs disagree, record the mismatch, verify the source of truth, and update the appropriate document.
+
+## Scope of this documentation set
+
+These documents describe ROCKSOUL-specific product work. Existing package READMEs, AGENTS.md files, specs, generated API docs, test instructions, and upstream changelogs are retained because they describe the current underlying codebase. They should be changed only when their own technical instructions become inaccurate.
+
+The root README is the canonical public-facing project overview. The upstream-translated README files are retained as inherited references and are not presented as translations of the ROCKSOUL DX product overview.
