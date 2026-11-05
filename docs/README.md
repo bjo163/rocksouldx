@@ -18,6 +18,7 @@ This directory contains product-specific documentation for ROCKSOUL DX. The prod
 | [Parallel workstreams](plans/ROCKSOUL-FLOW-PARALLEL-WORKSTREAMS.md) | Agent lane ownership, dependency waves, integration rules, and safe concurrency. |
 | [Execution packet contract](plans/ROCKSOUL-FLOW-EXECUTION-PACKET.md) | Deterministic one-task instructions and guardrails for local coding agents. |
 | [Repository scan policy](plans/ROCKSOUL-FLOW-REPO-SCAN-POLICY.md) | Root confinement, ignore precedence, generated/sensitive paths, symlinks, and incomplete scan handling. |
+| [Manifest inventory contract](plans/ROCKSOUL-FLOW-MANIFEST-INVENTORY.md) | Package managers, workspaces, scripts, toolchains, framework hints, and secret-safe output. |
 | [ROCKSOUL FLOW plan](plans/ROCKSOUL-FLOW.plan.md) | Phased, dependency-aware implementation backlog with independently executable microtasks. |
 
 ## Source-of-truth rules
