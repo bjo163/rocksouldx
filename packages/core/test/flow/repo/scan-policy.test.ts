@@ -14,6 +14,7 @@ describe("RepoScanPolicy", () => {
     expect(normalizeScanPath("packages/../../outside.txt")).toBeUndefined()
     expect(normalizeScanPath("/etc/passwd")).toBeUndefined()
     expect(normalizeScanPath("C:\\Users\\me\\repo\\file.txt")).toBeUndefined()
+    expect(normalizeScanPath("C:relative\\file.txt")).toBeUndefined()
     expect(normalizeScanPath("\\\\server\\share\\file.txt")).toBeUndefined()
   })
 
@@ -72,5 +73,6 @@ describe("RepoScanPolicy", () => {
     expect(isWithinScanRoot(root, inside)).toBe(true)
     expect(isWithinScanRoot(root, root)).toBe(true)
     expect(isWithinScanRoot(root, outside)).toBe(false)
+    expect(isWithinScanRoot("relative/repo", "relative/repo/file.ts")).toBe(false)
   })
 })
