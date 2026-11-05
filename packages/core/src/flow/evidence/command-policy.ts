@@ -97,6 +97,17 @@ export function assessValidationCommand(input: {
     }
   }
 
+  if (script.redacted) {
+    return {
+      status: "blocked",
+      command,
+      workingDirectory,
+      packagePath: script.packagePath,
+      scriptName: script.name,
+      reason: "The manifest script contains a secret-like value and cannot be safely reconstructed for execution",
+    }
+  }
+
   if (BLOCKED_PATTERNS.some((pattern) => pattern.test(command))) {
     return {
       status: "blocked",
