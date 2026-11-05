@@ -260,8 +260,12 @@ export function reviewLearningRecord(input: {
   if (!input.reason.trim()) diagnostics.push({ code: "review-reason-required", message: "A decision reason is required" })
   if (input.decision === "superseded" && !input.supersededBy?.trim())
     diagnostics.push({ code: "superseded-target-required", message: "Superseded records must point to the replacing learning ID" })
-  if (input.decision === "accepted" && input.record.privacyAssessment !== "clear")
-    diagnostics.push({ code: "privacy-unreviewed", message: "Only records with a clear privacy assessment can be accepted" })
+  if (input.decision === "accepted") {
+    const validation = validateLearningRecord({ record: input.record })
+    diagnostics.push(...validation.diagnostics)
+    if (input.record.privacyAssessment !== "clear" && validation.diagnostics.every((item) => item.code !== "privacy-unreviewed"))
+      diagnostics.push({ code: "privacy-unreviewed", message: "Only records with a clear privacy assessment can be accepted" })
+  }
 
   if (diagnostics.length) return { diagnostics }
   return {
