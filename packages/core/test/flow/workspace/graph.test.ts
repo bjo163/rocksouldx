@@ -40,6 +40,7 @@ describe("normalizeRemoteIdentity", () => {
   test("normalizes HTTPS and SSH remotes without .git suffixes", () => {
     expect(normalizeRemoteIdentity("git@github.com:Example/Repo.git")).toBe("github.com/example/repo")
     expect(normalizeRemoteIdentity("https://GitHub.com/Example/Repo.git")).toBe("github.com/example/repo")
+    expect(normalizeRemoteIdentity("ssh://git@github.com/Example/Repo.git")).toBe("github.com/example/repo")
   })
 
   test("rejects malformed or credential-bearing remote URLs", () => {
