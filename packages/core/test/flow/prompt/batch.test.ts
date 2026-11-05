@@ -1,5 +1,4 @@
 import { describe, expect, test } from "bun:test"
-import { parsePlanMarkdown } from "../../../src/flow/plan.js"
 import { compileParallelExecutionBatch, type ParallelPromptRequest } from "../../../src/flow/prompt/batch.js"
 
 const planMarkdown = [
@@ -49,7 +48,6 @@ const planMarkdown = [
   "- Verification: Run tests.",
   "- Deliverable: Collision.",
 ].join("\n")
-const plan = parsePlanMarkdown(planMarkdown)
 const revision = "a".repeat(40)
 const request = (taskID: string, branch: string, suffix: string): ParallelPromptRequest => ({
   taskID,
@@ -99,7 +97,6 @@ describe("compileParallelExecutionBatch", () => {
       generatedAt: "2026-11-05T10:00:00.000Z",
       planPath: "docs/plans/ROCKSOUL-FLOW.plan.md",
       planMarkdown,
-      plan,
       repositoryRevision: revision,
       requests: [
         request("RSF-102", "rocksoul/shared", "same"),
@@ -120,7 +117,6 @@ describe("compileParallelExecutionBatch", () => {
       generatedAt: "2026-11-05T10:00:00.000Z",
       planPath: "docs/plans/ROCKSOUL-FLOW.plan.md",
       planMarkdown,
-      plan,
       repositoryRevision: revision,
       requests: [
         request("RSF-102", "rocksoul/rsf-102", "102"),
@@ -139,7 +135,6 @@ describe("compileParallelExecutionBatch", () => {
       generatedAt: "2026-11-05T10:00:00.000Z",
       planPath: "docs/plans/ROCKSOUL-FLOW.plan.md",
       planMarkdown,
-      plan,
       repositoryRevision: revision,
       requests: [
         { ...request("RSF-102", "rocksoul/rsf-102", "102"), execution: { ...request("RSF-102", "rocksoul/rsf-102", "102").execution, worktreeID: undefined } },
