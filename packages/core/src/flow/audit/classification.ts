@@ -1,4 +1,4 @@
-import { normalizeScanPath } from "../repo/scan-policy.js"
+import { classifyScanPath } from "../repo/scan-policy.js"
 
 export type CapabilityClassification =
   | "implemented"
@@ -55,8 +55,10 @@ export interface CapabilityFindingDiagnostic {
     | "implemented-needs-source-and-test"
     | "implemented-needs-satisfied-criteria"
     | "partial-needs-covered-criterion"
+    | "partial-needs-current-evidence"
     | "missing-requires-complete-scan"
     | "missing-requires-unmet-criteria"
+    | "missing-conflicts-with-source-evidence"
     | "overlap-needs-related-finding"
     | "conflict-needs-conflict-criterion"
     | "deprecated-needs-deprecated-criterion"
@@ -70,6 +72,8 @@ export interface CapabilityFindingValidation {
   readonly diagnostics: readonly CapabilityFindingDiagnostic[]
 }
 
+const EVIDENCE_KINDS: readonly string[] = ["source", "test", "docs", "config", "plan", "visual"]
+
 /**
  * Validate a proposed capability classification against explicit criterion reviews and source references.
  * It never infers that code is implemented from search matches or filenames.
@@ -78,8 +82,8 @@ export function validateCapabilityFinding(input: CapabilityFindingInput): Capabi
   const diagnostics: CapabilityFindingDiagnostic[] = []
   const fail = (code: CapabilityFindingDiagnostic["code"], message: string) => diagnostics.push({ code, message })
 
-  if (!input.id.trim() || !input.requirementID.trim() || !input.snapshotRevision.trim() || !input.rubricVersion.trim())
-    fail("missing-identity", "Finding, requirement, snapshot revision, and rubric version are required")
+  if (!input.id.trim() || !input.requirementID.trim() || !input.rationale.trim() || !input.snapshotRevision.trim() || !input.rubricVersion.trim())
+    fail("missing-identity", "Finding, requirement, rationale, snapshot revision, and rubric version are required")
 
   const classifications: readonly string[] = ["implemented", "partial", "missing", "overlap", "conflict", "deprecated"]
   const confidence: readonly string[] = ["low", "medium", "high"]
@@ -103,7 +107,9 @@ export function validateCapabilityFinding(input: CapabilityFindingInput): Capabi
       continue
     }
     evidenceByID.set(evidence.id, evidence)
-    if (!normalizeScanPath(evidence.path)) fail("invalid-evidence-path", "Evidence path must be root-relative: " + evidence.id)
+    if (!EVIDENCE_KINDS.includes(evidence.kind)) fail("invalid-enum", "Evidence kind is not recognized: " + evidence.id)
+    if (!classifyScanPath({ path: evidence.path }).included)
+      fail("invalid-evidence-path", "Evidence path must be an included root-relative repository path: " + evidence.id)
     if (!evidence.revision.trim() || evidence.revision !== input.snapshotRevision) staleEvidenceIDs.push(evidence.id)
   }
 
@@ -121,9 +127,13 @@ export function validateCapabilityFinding(input: CapabilityFindingInput): Capabi
     }
   }
 
-  const currentEvidence = input.evidence.filter((item) => item.revision === input.snapshotRevision && normalizeScanPath(item.path))
+  const currentEvidence = input.evidence.filter((item) =>
+    item.revision === input.snapshotRevision && classifyScanPath({ path: item.path }).included,
+  )
   const criterionHasKind = (criterion: CapabilityCriterionReview, kind: CapabilityEvidenceKind) =>
     criterion.evidenceIDs.some((id) => currentEvidence.some((item) => item.id === id && item.kind === kind))
+  const criterionHasCurrentEvidence = (criterion: CapabilityCriterionReview) =>
+    criterion.evidenceIDs.some((id) => currentEvidence.some((item) => item.id === id))
 
   if (input.classification === "implemented") {
     if (input.criteria.length === 0 || input.criteria.some((item) => item.state !== "satisfied"))
@@ -136,17 +146,22 @@ export function validateCapabilityFinding(input: CapabilityFindingInput): Capabi
   }
 
   if (input.classification === "partial") {
-    if (!input.criteria.some((item) => item.state === "satisfied" || item.state === "partial"))
+    const covered = input.criteria.filter((item) => item.state === "satisfied" || item.state === "partial")
+    if (covered.length === 0)
       fail("partial-needs-covered-criterion", "Partial requires at least one satisfied or partially satisfied criterion")
+    if (covered.some((criterion) => !criterionHasCurrentEvidence(criterion)))
+      fail("partial-needs-current-evidence", "Every satisfied or partially satisfied criterion requires current evidence")
   }
 
   if (input.classification === "missing") {
     if (!input.scanComplete) fail("missing-requires-complete-scan", "Missing is valid only when the declared scan scope completed")
     if (input.criteria.length === 0 || input.criteria.some((item) => item.state !== "unmet"))
       fail("missing-requires-unmet-criteria", "Every criterion must be reviewed as unmet before classifying a requirement as missing")
+    if (currentEvidence.some((item) => item.kind === "source" || item.kind === "test"))
+      fail("missing-conflicts-with-source-evidence", "Current source or test evidence conflicts with a missing classification")
   }
 
-  if (input.classification === "overlap" && !(input.relatedFindingIDs?.length))
+  if (input.classification === "overlap" && !(input.relatedFindingIDs?.some((id) => id.trim())))
     fail("overlap-needs-related-finding", "Overlap requires at least one related finding reference")
   if (input.classification === "conflict" && !input.criteria.some((item) => item.state === "conflict"))
     fail("conflict-needs-conflict-criterion", "Conflict requires an explicitly reviewed conflicting criterion")
