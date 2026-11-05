@@ -1,10 +1,10 @@
 import path from "path"
+import { parsePlanMarkdown } from "../plan.js"
 import { compileExecutionPrompt } from "./compiler.js"
 import type {
   PromptCompilationResult,
   PromptPacket,
 } from "./compiler.js"
-import type { PlanParseResult } from "../plan.js"
 
 export interface ParallelPromptRequest {
   readonly taskID: string
@@ -33,7 +33,7 @@ export interface ParallelPromptBatchResult {
 }
 
 function canonicalWorktreePath(value: string): string | undefined {
-  if (path.win32.isAbsolute(value)) return path.win32.normalize(value).replaceAll("\\\\", "/").toLowerCase()
+  if (path.win32.isAbsolute(value)) return path.win32.normalize(value).replaceAll(String.fromCharCode(92), "/").toLowerCase()
   if (path.isAbsolute(value)) return path.resolve(value)
   return undefined
 }
@@ -70,6 +70,8 @@ export function compileParallelExecutionBatch(input: {
   maximumConcurrency: number
 }): ParallelPromptBatchResult {
   const diagnostics: string[] = []
+  const parsedPlan = parsePlanMarkdown(input.planMarkdown)
+  if (!parsedPlan.valid) diagnostics.push("Plan parser reports validation diagnostics")
   if (!input.packetPrefix.trim()) diagnostics.push("Packet prefix is required")
   if (!Number.isSafeInteger(input.maximumConcurrency) || input.maximumConcurrency < 1)
     diagnostics.push("Maximum concurrency must be a positive safe integer")
@@ -82,9 +84,9 @@ export function compileParallelExecutionBatch(input: {
   const seenWorktrees = new Set<string>()
   const seenPaths = new Set<string>()
   const blockedTasks: { taskID: string; reasons: string[] }[] = []
-  const candidates: { request: ParallelPromptRequest; index: number }[] = []
+  const candidates: { request: ParallelPromptRequest }[] = []
 
-  for (const [index, request] of input.requests.entries()) {
+  for (const request of input.requests) {
     const reasons: string[] = []
     if (seenTasks.has(request.taskID)) reasons.push("Task appears more than once in the batch")
     seenTasks.add(request.taskID)
@@ -103,14 +105,14 @@ export function compileParallelExecutionBatch(input: {
     if (path) seenPaths.add(path)
 
     if (reasons.length) blockedTasks.push({ taskID: request.taskID, reasons })
-    else candidates.push({ request, index })
+    else candidates.push({ request })
   }
 
   const collisions: ParallelPromptCollision[] = []
   for (let leftIndex = 0; leftIndex < candidates.length; leftIndex++) {
     const left = candidates[leftIndex]
     if (!left) continue
-    const leftTask = input.plan.tasks.find((task) => task.id === left.request.taskID)
+    const leftTask = parsedPlan.tasks.find((task) => task.id === left.request.taskID)
     if (!leftTask) continue
     for (let rightIndex = leftIndex + 1; rightIndex < candidates.length; rightIndex++) {
       const right = candidates[rightIndex]
